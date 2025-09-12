@@ -5,7 +5,7 @@
       <div>
         <h1 class="page-title">研发项目进度与工时总览</h1>
         <p class="page-description">
-          实时监控项目进度、里程碑完成情况和团队工时分配 | 最后更新: 2023-06-20 10:15
+          实时监控项目进度、里程碑完成情况和团队工时分配 | 最后更新: {{ lastUpdateTime }}
         </p>
       </div>
       
@@ -35,7 +35,7 @@
     
     <!-- 核心指标卡片 -->
     <el-row :gutter="16" class="metrics-row mb-4">
-      <el-col :span="4">
+      <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="总项目数" 
           :value=totalCount 
@@ -45,7 +45,7 @@
           trend-text="2个新项目"
         />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="进行中项目" 
           value="8" 
@@ -55,7 +55,7 @@
           trend-text="2个延期"
         />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="已完成项目" 
           value="4" 
@@ -65,7 +65,7 @@
           trend-text="按时完成率85%"
         />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="总工时(人天)" 
           value="486" 
@@ -75,7 +75,7 @@
           trend-text="本月124人天"
         />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="完成里程碑" 
           value="23/36" 
@@ -85,7 +85,7 @@
           trend-text="完成率64%"
         />
       </el-col>
-      <el-col :span="4">
+      <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="团队成员" 
           :value=teamMembers 
@@ -99,7 +99,7 @@
     
     <!-- 项目进度趋势与工时排名 -->
     <el-row :gutter="16" class="mb-4">
-      <el-col :span="16">
+      <el-col :span="16" :xs="24" :md="16">
         <el-card :border="false" class="chart-card">
           <div class="card-header">
             <h3 class="card-title">项目进度趋势</h3>
@@ -113,7 +113,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" :xs="24" :md="8">
         <el-card :border="false" class="ranking-card">
           <div class="card-header">
             <h3 class="card-title">员工工时排名</h3>
@@ -146,28 +146,69 @@
       </el-col>
     </el-row>
     
-    <!-- 其他部分将在后续步骤中实现 -->
+    <!-- 项目工时分布与团队工时对比 -->
+    <el-row :gutter="16" class="mb-4">
+      <el-col :span="12" :xs="24" :md="12">
+        <el-card :border="false" class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">项目工时分布</h3>
+          </div>
+          <div class="chart-container">
+            <ProjectHoursDistribution />
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12" :xs="24" :md="12">
+        <el-card :border="false" class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">团队工时对比</h3>
+          </div>
+          <div class="chart-container">
+            <TeamHoursComparison />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    
+    <!-- 项目详情与员工统计 -->
+    <el-row :gutter="16" class="mb-4">
+      <el-col :span="10" :xs="24" :md="10">
+        <el-card :border="false" class="timeline-card">
+          <ProjectTimeline :project="projectFilter !== 'all' ? projectFilter : 'productA'" />
+        </el-card>
+      </el-col>
+      <el-col :span="14" :xs="24" :md="14">
+        <el-card :border="false" class="table-card">
+          <div class="card-header">
+            <h3 class="card-title">员工进度与工时统计</h3>
+          </div>
+          <EmployeeStatsTable ref="statsTableRef" />
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive, onUnmounted } from 'vue'
 import { 
   Folder, Check, Clock, Flag, User, 
-  Download, ArrowRight, 
-  Loading
+  Download, ArrowRight, Loading
 } from '@element-plus/icons-vue'
 
 // 组件导入
 import MetricCard from '../components/dashboard/MetricCard.vue'
 import ProjectProgressChart from '../components/dashboard/ProjectProgressChart.vue'
 import RankingItem from '../components/dashboard/RankingItem.vue'
+import ProjectHoursDistribution from '../components/dashboard/ProjectHoursDistribution.vue'
+import TeamHoursComparison from '../components/dashboard/TeamHoursComparison.vue'
+import ProjectTimeline from '../components/dashboard/ProjectTimeline.vue'
+import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
 
 import { useProjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 const projectStore = useProjectStore()
-
 const { totalCount, teamMembers } = storeToRefs(projectStore)
 const { getList, getTeamMembers } = projectStore
 
@@ -176,6 +217,12 @@ const projectFilter = ref('all')
 const teamFilter = ref('all')
 const progressChartType = ref('progress')
 const rankingTimeRange = ref('month')
+const lastUpdateTime = ref('')
+const statsTableRef = ref(null)
+const loadingStatus = reactive({
+  mainData: false,
+  chartData: false
+})
 
 // 员工工时排名数据
 const employeeRanking = ref([
@@ -220,13 +267,61 @@ const employeeRanking = ref([
     avatar: 'https://picsum.photos/id/1074/200/200'
   }
 ])
+
+// 格式化时间
+const formatDateTime = () => {
+  const date = new Date()
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).replace(/\//g, '-')
+}
+
+// 刷新数据
+const refreshAllData = async () => {
+  loadingStatus.mainData = true
+  
+  try {
+    // 刷新主数据
+    await Promise.all([
+      getList(),
+      getTeamMembers()
+    ])
+    
+    // 刷新表格数据
+    if (statsTableRef.value) {
+      statsTableRef.value.refreshData()
+    }
+    
+    // 更新最后更新时间
+    lastUpdateTime.value = formatDateTime()
+  } catch (error) {
+    console.error('数据刷新失败:', error)
+  } finally {
+    loadingStatus.mainData = false
+  }
+}
+
+// 初始加载
 onMounted(() => {
-  getList()
-  getTeamMembers()
+  refreshAllData()
+  
+  // 监听父组件的刷新事件（来自MainLayout）
+  window.addEventListener('refreshDashboard', refreshAllData)
+})
+
+// 清理事件监听
+onUnmounted(() => {
+  window.removeEventListener('refreshDashboard', refreshAllData)
 })
 </script>
 
 <style scoped>
+/* 原有样式保持不变 */
 .dashboard-container {
   width: 100%;
 }
@@ -253,13 +348,15 @@ onMounted(() => {
 .filter-group {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .metrics-row {
   margin-top: 10px;
 }
 
-.chart-card, .ranking-card {
+.chart-card, .ranking-card, .timeline-card, .table-card {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border-radius: 6px;
   overflow: hidden;
@@ -303,5 +400,22 @@ onMounted(() => {
 .export-btn {
   display: flex;
   align-items: center;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-group {
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
 }
 </style>
