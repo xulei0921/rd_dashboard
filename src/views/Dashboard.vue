@@ -193,7 +193,7 @@
 import { onMounted, ref, reactive, onUnmounted } from 'vue'
 import { 
   Folder, Check, Clock, Flag, User, 
-  Download, ArrowRight, Loading
+  Download, ArrowRight, Loading, Top
 } from '@element-plus/icons-vue'
 
 // 组件导入
@@ -217,7 +217,7 @@ const projectFilter = ref('all')
 const teamFilter = ref('all')
 const progressChartType = ref('progress')
 const rankingTimeRange = ref('month')
-const lastUpdateTime = ref('')
+const lastUpdateTime = ref('2025/9/14')
 const statsTableRef = ref(null)
 const loadingStatus = reactive({
   mainData: false,
@@ -321,7 +321,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 原有样式保持不变 */
 .dashboard-container {
   width: 100%;
 }
@@ -335,7 +334,7 @@ onUnmounted(() => {
 }
 
 .page-title {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -348,8 +347,9 @@ onUnmounted(() => {
 .filter-group {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   gap: 8px;
+  width: 280px;
 }
 
 .metrics-row {

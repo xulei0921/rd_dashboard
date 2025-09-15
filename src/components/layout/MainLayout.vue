@@ -9,7 +9,7 @@
       
       <el-menu 
         :default-active="activeRoute" 
-        mode="horizontal" 
+        mode="horizontal"
         class="nav-menu"
         @select="handleMenuSelect"
       >
@@ -48,7 +48,7 @@
         <el-dropdown placement="bottom-end">
           <el-button type="text" class="user-btn">
             <el-avatar class="mr-2"><img src="https://picsum.photos/id/1005/200/200" alt="用户头像"></el-avatar>
-            <span>张经理</span>
+            <span class="nickname">张经理</span>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
@@ -139,6 +139,8 @@ const handleRefresh = () => {
 .header-actions {
   display: flex;
   align-items: center;
+  width: 267px;
+  gap: 12px;
 }
 
 .user-btn {
@@ -182,5 +184,9 @@ const handleRefresh = () => {
   --el-badge-font-size: 10px;
   --el-badge-min-width: 16px;
   --el-badge-height: 16px;
+}
+
+.nickname {
+  margin-left: 5px;
 }
 </style>
