@@ -23,7 +23,7 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
-import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import { ArrowUp, ArrowDown, CaretTop, CaretBottom } from '@element-plus/icons-vue'
 
 const props = defineProps({
   rank: {
@@ -61,12 +61,12 @@ const rankClass = computed(() => {
   if (props.rank === 1) return 'rank-1'
   if (props.rank === 2) return 'rank-2'
   if (props.rank === 3) return 'rank-3'
-  return ''
+  return 'rank-common'
 })
 
 // 计算趋势图标
 const trendIcon = computed(() => {
-  return props.trend === 'increase' ? ArrowUp : ArrowDown
+  return props.trend === 'increase' ? CaretTop : CaretBottom
 })
 
 // 计算趋势样式
@@ -95,13 +95,17 @@ const trendClass = computed(() => {
 }
 
 .rank-2 {
-  background-color: #f2f3f5;
+  background-color: #F9FAFB;
   border: 1px solid #e5e6eb;
 }
 
 .rank-3 {
   background-color: #fff2e8;
   border: 1px solid #ffd8bf;
+}
+
+.rank-common {
+  border: 1px solid #F3F4F6;
 }
 
 .rank-number {
@@ -114,6 +118,7 @@ const trendClass = computed(() => {
   font-size: 14px;
   font-weight: bold;
   margin-right: 12px;
+  background-color: #F3F4F6;
 }
 
 .rank-1 .rank-number {
@@ -122,7 +127,7 @@ const trendClass = computed(() => {
 }
 
 .rank-2 .rank-number {
-  background-color: #e5e6eb;
+  background-color: #F3F4F6;
   color: #86909c;
 }
 

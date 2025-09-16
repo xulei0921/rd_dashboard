@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import router from "@/router";
 
-const baseURL = 'http://192.168.1.7:8077/api'
+const baseURL = 'http://192.168.1.6:8077/api'
 
 const instance = axios.create({
     // TODO 1. 基础地址，超时时间

@@ -38,67 +38,71 @@
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="总项目数" 
-          :value=totalCount 
+          :value=totalProjects 
           :icon="Folder" 
           icon-color="#165DFF"
+          iconBgColor="#E8F3FF"
           trend="increase"
-          trend-text="2个新项目"
+          trend-text="0个新项目"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="进行中项目" 
-          value="8" 
+          :value=ongoingProjCount 
           :icon="Loading" 
           icon-color="#FF7D00"
-          trend="normal"
+          iconBgColor="#FFF2E5"
+          trend="warning"
           trend-text="2个延期"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="已完成项目" 
-          value="4" 
+          :value=completedProjCount 
           :icon="Check" 
           icon-color="#00B42A"
-          trend="increase"
+          iconBgColor="#E5F7E9"
+          trend="CircleCheck"
           trend-text="按时完成率85%"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="总工时(人天)" 
-          value="486" 
+          :value=totalManDaysCount
           :icon="Clock" 
           icon-color="#722ED1"
-          trend="normal"
+          iconBgColor="#F3E8FF"
+          trend="clock"
           trend-text="本月124人天"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="完成里程碑" 
-          value="23/36" 
+          :value="`${completedProjCount}/${totalProjects}`"
           :icon="Flag" 
           icon-color="#165DFF"
-          trend="increase"
-          trend-text="完成率64%"
+          trend="flag"
+          :trend-text="`完成率${completionRate}%`"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="团队成员" 
-          :value=teamMembers 
+          :value=totalUserCount 
           :icon="User" 
           icon-color="#165DFF"
-          trend="normal"
+          trend="avatar"
           trend-text="4个团队"
         />
       </el-col>
     </el-row>
     
     <!-- 项目进度趋势与工时排名 -->
-    <el-row :gutter="16" class="mb-4">
+    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="16" :xs="24" :md="16">
         <el-card :border="false" class="chart-card">
           <div class="card-header">
@@ -117,7 +121,7 @@
         <el-card :border="false" class="ranking-card">
           <div class="card-header">
             <h3 class="card-title">员工工时排名</h3>
-            <el-select v-model="rankingTimeRange" size="small">
+            <el-select v-model="rankingTimeRange" size="small" style="width: 70px;">
               <el-option label="本月" value="month"></el-option>
               <el-option label="上月" value="lastMonth"></el-option>
               <el-option label="本季度" value="quarter"></el-option>
@@ -147,7 +151,7 @@
     </el-row>
     
     <!-- 项目工时分布与团队工时对比 -->
-    <el-row :gutter="16" class="mb-4">
+    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="12" :xs="24" :md="12">
         <el-card :border="false" class="chart-card">
           <div class="card-header">
@@ -171,7 +175,7 @@
     </el-row>
     
     <!-- 项目详情与员工统计 -->
-    <el-row :gutter="16" class="mb-4">
+    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="10" :xs="24" :md="10">
         <el-card :border="false" class="timeline-card">
           <ProjectTimeline :project="projectFilter !== 'all' ? projectFilter : 'productA'" />
@@ -209,8 +213,23 @@ import { useProjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 const projectStore = useProjectStore()
-const { totalCount, teamMembers } = storeToRefs(projectStore)
-const { getList, getTeamMembers } = projectStore
+
+const { 
+        totalProjects,
+        totalUserCount, 
+        ongoingProjCount, 
+        completedProjCount,
+        totalManDaysCount,
+        completionRate
+      } = storeToRefs(projectStore)
+
+const { 
+        getTotalProjects, 
+        getTotalUserCount, 
+        getOngoingProjectsCount, 
+        getCompletedProjCount ,
+        getTotalManDaysCount
+      } = projectStore
 
 // 状态
 const projectFilter = ref('all')
@@ -288,8 +307,11 @@ const refreshAllData = async () => {
   try {
     // 刷新主数据
     await Promise.all([
-      getList(),
-      getTeamMembers()
+      getTotalProjects(),
+      getTotalUserCount(),
+      getOngoingProjectsCount(),
+      getCompletedProjCount(),
+      getTotalManDaysCount()
     ])
     
     // 刷新表格数据
@@ -323,6 +345,7 @@ onUnmounted(() => {
 <style scoped>
 .dashboard-container {
   width: 100%;
+  padding: 0 110px;
 }
 
 .dashboard-header {
@@ -360,6 +383,7 @@ onUnmounted(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border-radius: 6px;
   overflow: hidden;
+  height: 100%;
 }
 
 .card-header {
@@ -371,14 +395,15 @@ onUnmounted(() => {
 }
 
 .card-title {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
   margin: 0;
 }
 
 .chart-container {
+  overflow: auto;
   padding: 20px;
-  height: 320px;
+  height: 446px;
 }
 
 .ranking-list {
@@ -395,6 +420,11 @@ onUnmounted(() => {
   color: #165dff;
   font-size: 14px;
   padding: 5px 0;
+}
+
+.timeline-card {
+  height: 475px;
+  overflow: auto;
 }
 
 .export-btn {

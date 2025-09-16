@@ -2,7 +2,7 @@
   <el-card class="metric-card" :border="false">
     <div class="metric-header">
       <span class="metric-title">{{ title }}</span>
-      <el-icon :size="20" class="metric-icon" :style="{ color: iconColor }">
+      <el-icon :size="20" class="metric-icon" :style="{ color: iconColor, backgroundColor: iconBgColor }">
         <component :is="icon" />
       </el-icon>
     </div>
@@ -11,14 +11,14 @@
       <el-icon :size="14" class="mr-1">
         <component :is="trendIcon()" />
       </el-icon>
-      <span>{{ trendText }}</span>
+      <span style="margin-left: 2px;">{{ trendText }}</span>
     </div>
   </el-card>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { ArrowUp, ArrowDown, Check } from '@element-plus/icons-vue'
+import { computed, defineProps } from 'vue'
+import { ArrowUp, ArrowDown, Check, Top, Warning, CircleCheck, Clock, Flag, Avatar } from '@element-plus/icons-vue'
 
 const props = defineProps({
   title: {
@@ -26,7 +26,7 @@ const props = defineProps({
     required: true
   },
   value: {
-    type: String,
+    type: Number,
     required: true
   },
   icon: {
@@ -36,6 +36,10 @@ const props = defineProps({
   iconColor: {
     type: String,
     default: '#165DFF'
+  },
+  iconBgColor:{
+    type: String,
+    default: '#E8F3FF'
   },
   trend: {
     type: String,
@@ -50,32 +54,61 @@ const props = defineProps({
 const trendIcon = () => {
   switch (props.trend) {
     case 'increase':
-      return ArrowUp
+      return Top
     case 'decrease':
       return ArrowDown
     case 'normal':
       return Check
+    case 'warning':
+      return Warning
+    case 'CircleCheck':
+      return CircleCheck
+    case 'clock':
+      return Clock
+    case 'flag':
+      return Flag
+    case 'avatar':
+      return Avatar
     default:
       return ArrowUp
   }
 }
 
-const trendClass = () => {
+// const trendClass = () => {
+//   switch (props.trend) {
+//     case 'increase':
+//       return 'text-success'
+//     case 'decrease':
+//       return 'text-danger'
+//     case 'normal':
+//       return 'text-primary'
+//     default:
+//       return 'text-success'
+//   }
+// }
+
+const trendClass = computed(() => {
   switch (props.trend) {
     case 'increase':
       return 'text-success'
-    case 'decrease':
-      return 'text-danger'
-    case 'normal':
-      return 'text-primary'
-    default:
+    case 'warning':
+      return 'text-warning'
+    case 'CircleCheck':
       return 'text-success'
+    case 'clock':
+      return 'text-primary'
+    case 'flag':
+      return 'text-success'
+    case 'avatar':
+      return 'text-group'
   }
-}
+})
+
 </script>
 
 <style scoped>
 .metric-card {
+  position: relative;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border-radius: 6px;
@@ -108,8 +141,20 @@ const trendClass = () => {
   align-items: center;
 }
 
+.metric-icon {
+  position: absolute;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+}
+
 .text-success {
   color: #00b42a;
+}
+
+.text-warning {
+  color: #FF7D00;
 }
 
 .text-danger {
@@ -117,6 +162,10 @@ const trendClass = () => {
 }
 
 .text-primary {
-  color: #165dff;
+  color: #165DFF;
+}
+
+.text-group {
+  color: #86909C;
 }
 </style>

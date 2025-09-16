@@ -2,7 +2,7 @@
   <div class="project-timeline">
     <div class="timeline-header">
       <h3 class="timeline-title">{{ projectName }} 里程碑</h3>
-      <el-select v-model="selectedProject" size="small" @change="handleProjectChange">
+      <el-select v-model="selectedProject" size="small" @change="handleProjectChange" style="width: 85px;">
         <el-option label="产品A" value="productA"></el-option>
         <el-option label="产品B" value="productB"></el-option>
         <el-option label="产品C" value="productC"></el-option>
