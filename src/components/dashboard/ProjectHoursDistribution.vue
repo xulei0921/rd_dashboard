@@ -7,6 +7,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Chart, registerables } from 'chart.js'
+import { generateRandomColorPairs } from '@/utils/colorUtils'
 
 import { useProjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -27,35 +28,6 @@ Chart.register(...registerables)
 const chartRef = ref(null)
 let chartInstance = null
 
-
-// 接收外部数据
-const props = defineProps({
-  data: {
-    type: Object,
-    default: () => ({
-      labels: ['产品A', '产品B', '产品C', '基础平台'],
-      // labels: projectName,
-      datasets: [{
-        data: [120, 180, 95, 91],
-        // data: totalConsumed,
-        backgroundColor: [
-          'rgba(22, 93, 255, 0.7)',
-          'rgba(0, 180, 42, 0.7)',
-          'rgba(255, 125, 0, 0.7)',
-          'rgba(126, 87, 194, 0.7)'
-        ],
-        borderColor: [
-          'rgba(22, 93, 255, 1)',
-          'rgba(0, 180, 42, 1)',
-          'rgba(255, 125, 0, 1)',
-          'rgba(126, 87, 194, 1)'
-        ],
-        borderWidth: 1
-      }]
-    })
-  }
-})
-
 // 创建图表
 const createChart = () => {
   if (chartInstance) {
@@ -63,10 +35,29 @@ const createChart = () => {
   }
   
   const ctx = chartRef.value.getContext('2d')
+
+  // 根据数组长度生成随机颜色
+  const dataLength = projectName.value.length
+  const randomColors = generateRandomColorPairs(dataLength)
   
+  // 提取边框色和背景色数组
+  const backgroundColor = randomColors.map(item => item.backgroundColor)
+  // const borderColor = randomColors.map(item => item.borderColor)
+
+  // 使用从store获取的数据
+  const chartData = {
+    labels: projectName.value,
+    datasets: [{
+      data: totalConsumed.value,
+      backgroundColor: backgroundColor,
+      // borderColor: borderColor,
+      borderWidth: 1
+    }]
+  }
+
   chartInstance = new Chart(ctx, {
     type: 'doughnut',
-    data: props.data,
+    data: chartData,
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -83,7 +74,7 @@ const createChart = () => {
           callbacks: {
             label: function(context) {
               const label = context.label || '';
-              const value = context.raw || 0;
+              const value = context.raw.toFixed(2) || 0;
               const total = context.dataset.data.reduce((a, b) => a + b, 0);
               const percentage = Math.round((value / total) * 100);
               return `${label}: ${value}人天 (${percentage}%)`;
@@ -102,7 +93,7 @@ const createChart = () => {
 }
 
 // 监听数据变化
-watch(() => props.data, () => {
+watch([projectName, totalConsumed], () => {
   createChart()
 }, { deep: true })
 

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import request from '@/utils/request'; // 假设已有的请求工具
+import request from '@/utils/request';
+import { getEmployeeRanking } from '@/api/employee'
 
 export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () => {
   // 状态
@@ -26,6 +27,7 @@ export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () =
       const res = await request.get('/data/employeeWorkHoursRanking', {
         params: { timeFilter }
       });
+      // const res = await getEmployeeRanking(timeFilter)
 
       // console.log(res)
       // 处理数据格式（适配RankingItem组件）
