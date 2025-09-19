@@ -8,11 +8,25 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Chart, registerables } from 'chart.js'
 
+import { useProjectStore } from '@/store'
+import { storeToRefs } from 'pinia'
+const projectStore = useProjectStore()
+
+const {
+        projectName,
+        totalConsumed
+      } = storeToRefs(projectStore)
+
+const {
+        fetchProjWorkHoursDistribution
+      } = projectStore
+
 // 注册Chart.js组件
 Chart.register(...registerables)
 
 const chartRef = ref(null)
 let chartInstance = null
+
 
 // 接收外部数据
 const props = defineProps({
@@ -20,8 +34,10 @@ const props = defineProps({
     type: Object,
     default: () => ({
       labels: ['产品A', '产品B', '产品C', '基础平台'],
+      // labels: projectName,
       datasets: [{
         data: [120, 180, 95, 91],
+        // data: totalConsumed,
         backgroundColor: [
           'rgba(22, 93, 255, 0.7)',
           'rgba(0, 180, 42, 0.7)',
@@ -93,6 +109,7 @@ watch(() => props.data, () => {
 // 挂载时创建图表
 onMounted(() => {
   createChart()
+  fetchProjWorkHoursDistribution()
 })
 
 // 监听窗口大小变化

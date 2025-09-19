@@ -8,3 +8,4 @@ pinia.use(persist)
 export default pinia
 
 export * from './project'
+export * from './employee-work-hours'

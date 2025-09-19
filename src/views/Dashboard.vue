@@ -82,7 +82,7 @@
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
         <MetricCard 
           title="完成里程碑" 
-          :value="`${completedProjCount}/${totalProjects}`"
+          :value="`${totalCompletedTasks}/${totalTasks}`"
           :icon="Flag" 
           icon-color="#165DFF"
           trend="flag"
@@ -96,7 +96,7 @@
           :icon="User" 
           icon-color="#165DFF"
           trend="avatar"
-          trend-text="4个团队"
+          :trend-text="`${totalTeamCount}个团队`"
         />
       </el-col>
     </el-row>
@@ -112,7 +112,7 @@
               <el-radio-button label="hours">工时消耗</el-radio-button>
             </el-radio-group>
           </div>
-          <div class="chart-container">
+          <div class="chart-container-1">
             <ProjectProgressChart />
           </div>
         </el-card>
@@ -121,7 +121,7 @@
         <el-card :border="false" class="ranking-card">
           <div class="card-header">
             <h3 class="card-title">员工工时排名</h3>
-            <el-select v-model="rankingTimeRange" size="small" style="width: 70px;">
+            <el-select v-model="rankingTimeRange" size="small" style="width: 70px;" @change="fetchEmployeeRanking">
               <el-option label="本月" value="month"></el-option>
               <el-option label="上月" value="lastMonth"></el-option>
               <el-option label="本季度" value="quarter"></el-option>
@@ -142,10 +142,16 @@
             />
           </div>
           <div class="view-more">
-            <el-button type="text" class="view-more-btn">
+            <el-button type="text" class="view-more-btn" @click="openFullRanking">
               查看完整排名 <el-icon :size="14"><ArrowRight /></el-icon>
             </el-button>
           </div>
+
+          <FullRankingDialog
+            v-model:visible="showFullRanking"
+            :init-time-range="rankingTimeRange"
+          />
+
         </el-card>
       </el-col>
     </el-row>
@@ -194,7 +200,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, onUnmounted } from 'vue'
+import { onMounted, ref, reactive, onUnmounted, watch } from 'vue'
 import { 
   Folder, Check, Clock, Flag, User, 
   Download, ArrowRight, Loading, Top
@@ -208,19 +214,25 @@ import ProjectHoursDistribution from '../components/dashboard/ProjectHoursDistri
 import TeamHoursComparison from '../components/dashboard/TeamHoursComparison.vue'
 import ProjectTimeline from '../components/dashboard/ProjectTimeline.vue'
 import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
+import FullRankingDialog from '@/components/dashboard/FullRankingDialog.vue'
 
-import { useProjectStore } from '@/store'
+import { useProjectStore, useEmployeeWorkHoursStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 const projectStore = useProjectStore()
 
+const workHourStore = useEmployeeWorkHoursStore()
+
 const { 
         totalProjects,
-        totalUserCount, 
+        totalUserCount,
+        totalTeamCount,
         ongoingProjCount, 
         completedProjCount,
         totalManDaysCount,
-        completionRate
+        completionRate,
+        totalTasks,
+        totalCompletedTasks
       } = storeToRefs(projectStore)
 
 const { 
@@ -228,9 +240,19 @@ const {
         getTotalUserCount, 
         getOngoingProjectsCount, 
         getCompletedProjCount ,
-        getTotalManDaysCount
+        getTotalManDaysCount,
+        getCompMilestonesCount
       } = projectStore
 
+const {
+        employeeRanking,
+        loading
+      } = storeToRefs(workHourStore)
+
+const {
+        fetchEmployeeRanking
+      } = workHourStore
+  
 // 状态
 const projectFilter = ref('all')
 const teamFilter = ref('all')
@@ -238,54 +260,23 @@ const progressChartType = ref('progress')
 const rankingTimeRange = ref('month')
 const lastUpdateTime = ref('2025/9/14')
 const statsTableRef = ref(null)
+const isViewMore = ref(false)
 const loadingStatus = reactive({
   mainData: false,
   chartData: false
 })
 
-// 员工工时排名数据
-const employeeRanking = ref([
-  {
-    name: '王华',
-    team: '前端团队',
-    hours: '22.3天',
-    trend: 'increase',
-    trendValue: '12.6%',
-    avatar: 'https://picsum.photos/id/1027/200/200'
-  },
-  {
-    name: '张伟',
-    team: '后端团队',
-    hours: '20.5天',
-    trend: 'increase',
-    trendValue: '34.0%',
-    avatar: 'https://picsum.photos/id/1025/200/200'
-  },
-  {
-    name: '李明',
-    team: '后端团队',
-    hours: '18.5天',
-    trend: 'increase',
-    trendValue: '14.2%',
-    avatar: 'https://picsum.photos/id/1012/200/200'
-  },
-  {
-    name: '刘芳',
-    team: '测试团队',
-    hours: '16.8天',
-    trend: 'decrease',
-    trendValue: '4.0%',
-    avatar: 'https://picsum.photos/id/1066/200/200'
-  },
-  {
-    name: '赵强',
-    team: '数据团队',
-    hours: '14.2天',
-    trend: 'decrease',
-    trendValue: '24.1%',
-    avatar: 'https://picsum.photos/id/1074/200/200'
-  }
-])
+// 控制弹窗显示
+const showFullRanking = ref(false)
+
+// 打开弹窗
+const openFullRanking = () => {
+  showFullRanking.value = true
+}
+
+watch(rankingTimeRange, (newVal) => {
+  fetchEmployeeRanking(newVal);
+}, { immediate: true }); // immediate: true 确保初始加载
 
 // 格式化时间
 const formatDateTime = () => {
@@ -311,7 +302,9 @@ const refreshAllData = async () => {
       getTotalUserCount(),
       getOngoingProjectsCount(),
       getCompletedProjCount(),
-      getTotalManDaysCount()
+      getTotalManDaysCount(),
+      fetchEmployeeRanking(),
+      getCompMilestonesCount()
     ])
     
     // 刷新表格数据
@@ -403,10 +396,17 @@ onUnmounted(() => {
 .chart-container {
   overflow: auto;
   padding: 20px;
-  height: 446px;
+  height: 500px;
+}
+
+.chart-container-1 {
+  padding: 20px;
+  height: 500px;
 }
 
 .ranking-list {
+  overflow: hidden;
+  height: 500px;
   padding: 10px 20px;
 }
 

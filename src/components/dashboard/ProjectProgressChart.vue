@@ -38,15 +38,17 @@ const chartData = ref({ labels: [], datasets: [] }) // 最终给图表用的完�
 const CHART_STYLE_TEMPLATE = {
   // 所有数据集共享的公共样式
   common: {
-    tension: 0.4,    // 曲线平滑度
+    tension: 0.2,    // 曲线平滑度
     fill: true,      // 填充曲线下方区域
     pointRadius: 3,  // 数据点大小
     pointHoverRadius: 6, // 鼠标悬浮时数据点大小
     borderWidth: 2,   // 线条宽度
 
+    // 如果当前数据集全为0，将数据集在图表中的曲线类型改为虚线
     borderDash: (context) => {
-    // 判断当前数据集是否全为0
+      // 判断当前数据集是否全为0
       const isAllZero = context.dataset.data.every(val => val === 0);
+      // 「5px 实线 + 3px 空白」的重复模式
       return isAllZero ? [5, 3] : [];
     },
     borderColor: (context) => {
@@ -98,23 +100,26 @@ const fetchChartData = async () => {
     isLoading.value = true
     error.value = null
 
-    // 1. 发起请求（替换为你的真实后端接口地址）
+    // 1. 发起请求
     const response = await fetch('http://192.168.1.6:8077/api/data/projectProgressTrend', {
-      method: 'GET', // 若后端需POST，可改为POST并传body
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 若需身份验证，添加Token（示例）：
+        // 若需身份验证，添加Token：
         // 'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
+
+    // console.log(response)
 
     // 2. 检查请求状态（非200抛错）
     if (!response.ok) {
       throw new Error(`请求失败 [${response.status}]: ${response.statusText}`)
     }
 
-    // 3. 解析后端响应（适配你的JSON格式）
+    // 3. 解析后端响应（适配JSON格式）
     const backendResp = await response.json()
+    // console.log(backendResp)
 
     // 4. 检查后端业务状态（code≠200视为业务错误）
     if (backendResp.code !== 200 || !backendResp.success) {
@@ -183,7 +188,7 @@ const createOrUpdateChart = () => {
   // 初始化新图表
   const ctx = chartRef.value.getContext('2d')
   chartInstance = new Chart(ctx, {
-    type: 'line', // 图表类型（折线图，与需求匹配）
+    type: 'line', // 图表类型（折线图）
     data: chartData.value,
     options: {
       // 响应式配置（适配不同屏幕尺寸）
@@ -192,7 +197,7 @@ const createOrUpdateChart = () => {
       plugins: {
         // 图例配置（项目太多，支持滚动）
         legend: {
-          position: 'right', // 图例放右侧（避免顶部拥挤）
+          position: 'bottom', // 图例放右侧（避免顶部拥挤）
           labels: {
             boxWidth: 12, // 图例前小方块尺寸
             usePointStyle: true, // 用圆点代替方块
@@ -222,7 +227,14 @@ const createOrUpdateChart = () => {
       scales: {
         y: {
           beginAtZero: true, // y轴从0开始
-          max: 100, // y轴最大值（进度百分比，最大100）
+          // max: 100, // y轴最大值（进度百分比，最大100）
+          max: (context) => {
+            // 获取所有数据集的最大值
+            const allValues = context.chart.data.datasets.flatMap(dataset => dataset.data);
+            const maxValue = Math.max(...allValues);
+            // 最大值基础上增加10%作为缓冲，确保数据点不贴边
+            return maxValue > 100 ? Math.ceil(maxValue * 1.1) : 100;
+          },
           title: {
             display: true,
             text: '完成进度 (%)' // y轴标题
@@ -241,7 +253,7 @@ const createOrUpdateChart = () => {
             text: '月份' // x轴标题
           },
           grid: {
-            display: false // 隐藏x轴网格线（减少干扰）
+            display: false // 隐藏x轴网格线
           }
         }
       },
@@ -288,7 +300,7 @@ onUnmounted(() => {
 <style scoped>
 .progress-chart {
   width: 100%;
-  height: 600px; /* 固定图表高度（根据需求调整） */
+  height: 500px; /* 固定图表高度（根据需求调整） */
   position: relative;
   padding: 20px;
   box-sizing: border-box;
