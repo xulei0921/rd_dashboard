@@ -63,13 +63,24 @@
     
     <!-- 主内容区 -->
     <el-main class="main-content">
+      <el-alert
+        v-if="isShowAlert"
+        title="刷新成功"
+        type="success" 
+        center 
+        show-icon 
+        class="refreshAlert"
+        :closable="false"
+        :auto-close="2000"
+        @close="isShowAlert = false"
+      ></el-alert>
       <router-view />
     </el-main>
     
     <!-- 页脚 -->
     <el-footer class="footer">
       <div class="footer-content">
-        <p>© 2023 软件研发管理平台 | 数据每30分钟同步一次</p>
+        <p>© 2025 软件研发管理平台 | 数据每30分钟同步一次</p>
         <div class="footer-links">
           <a href="#">使用指南</a>
           <a href="#">帮助中心</a>
@@ -83,11 +94,13 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useAppStore } from '@/store'
 import { 
   User, Files, UserFilled, Document, 
   Refresh, Bell, 
   Grid
 } from '@element-plus/icons-vue'
+// import { Alert } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
@@ -95,6 +108,9 @@ const route = useRoute()
 // 状态
 const timeRange = ref('month')
 const activeRoute = computed(() => route.path)
+const isShowAlert = ref(false)
+
+const appStore = useAppStore()
 
 // 方法
 const handleMenuSelect = (index) => {
@@ -103,8 +119,9 @@ const handleMenuSelect = (index) => {
 
 const handleRefresh = () => {
   // 刷新数据的逻辑
+  appStore.triggerRefresh() // 触发刷新信号
   console.log('刷新数据')
-
+  isShowAlert.value = true
 }
 </script>
 
@@ -154,6 +171,15 @@ const handleRefresh = () => {
   padding: 20px;
   background-color: #f5f7fa;
   overflow-y: auto;
+}
+
+.refreshAlert {
+  /* position: absolute; */
+  position: fixed;
+  width: 150px;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 1;
 }
 
 .footer {

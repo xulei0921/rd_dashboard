@@ -39,7 +39,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useProjectStore } from '@/store'
+import { storeToRefs } from 'pinia'
+
+const projectStore = useProjectStore()
+
+const { projectDeatils } = storeToRefs(projectStore)
+const { getProjectDetails } = projectStore
 
 const props = defineProps({
   project: {
@@ -137,6 +144,10 @@ const filteredMilestones = computed(() => {
 const handleProjectChange = (value) => {
   selectedProject.value = value
 }
+
+onMounted(() => {
+  getProjectDetails()
+})
 </script>
 
 <style scoped>

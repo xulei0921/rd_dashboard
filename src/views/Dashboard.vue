@@ -216,12 +216,13 @@ import ProjectTimeline from '../components/dashboard/ProjectTimeline.vue'
 import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
 import FullRankingDialog from '@/components/dashboard/FullRankingDialog.vue'
 
-import { useProjectStore, useEmployeeWorkHoursStore } from '@/store'
+import { useProjectStore, useEmployeeWorkHoursStore, useAppStore, useTeamStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 const projectStore = useProjectStore()
-
 const workHourStore = useEmployeeWorkHoursStore()
+const appStore = useAppStore()
+const teamStore = useTeamStore()
 
 const { 
         totalProjects,
@@ -232,7 +233,7 @@ const {
         totalManDaysCount,
         completionRate,
         totalTasks,
-        totalCompletedTasks
+        totalCompletedTasks,
       } = storeToRefs(projectStore)
 
 const { 
@@ -244,6 +245,10 @@ const {
         getCompMilestonesCount
       } = projectStore
 
+const {
+        getTeamWorkHoursComparison
+      } = teamStore
+  
 const {
         employeeRanking,
         loading
@@ -278,6 +283,13 @@ watch(rankingTimeRange, (newVal) => {
   fetchEmployeeRanking(newVal);
 }, { immediate: true }); // immediate: true 确保初始加载
 
+watch(
+  () => appStore.refreshTrigger,
+  () => {
+    refreshAllData() // 状态变化时执行刷新
+  }
+)
+
 // 格式化时间
 const formatDateTime = () => {
   const date = new Date()
@@ -304,7 +316,8 @@ const refreshAllData = async () => {
       getCompletedProjCount(),
       getTotalManDaysCount(),
       fetchEmployeeRanking(),
-      getCompMilestonesCount()
+      getCompMilestonesCount(),
+      getTeamWorkHoursComparison()
     ])
     
     // 刷新表格数据
@@ -320,6 +333,11 @@ const refreshAllData = async () => {
     loadingStatus.mainData = false
   }
 }
+
+setInterval(() => {
+  refreshAllData()
+  console.log('111')
+}, 1800000)
 
 // 初始加载
 onMounted(() => {

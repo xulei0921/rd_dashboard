@@ -82,7 +82,7 @@ const tableData = ref([
     avatar: 'https://picsum.photos/id/1027/200/200',
     team: '前端团队',
     project: '产品A',
-    progress: 75,
+    progress: 7,
     hours: 22.3,
     overtime: 3.5,
     status: 'onTime'

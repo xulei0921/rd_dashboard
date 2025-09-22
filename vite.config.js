@@ -10,6 +10,13 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+  server: {
+    // 运行局域网访问
+    host: '0.0.0.0',
+    port: 5183,
+    open: false,
+    cors: true
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
