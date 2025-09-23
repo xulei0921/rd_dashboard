@@ -53,7 +53,7 @@
     </div>
 
     <!-- 排名列表 -->
-    <div class="ranking-container">
+    <div class="ranking-container" ref="listContainer">
       <el-skeleton v-if="loading" :rows="8" :cols="1" class="skeleton-loading" />
       
       <div v-else-if="filteredList.length === 0" class="empty-state">
@@ -134,6 +134,7 @@ const sortAsc = ref(false)  // 排序方向：false-降序（默认）
 // const loading = ref(false)
 const currentPage = ref(1)
 const pageSize = ref(10)
+const listContainer = ref(null)
 
 // 原始数据（从store中获取）
 const fullRankingList = employeeRanking
@@ -200,6 +201,12 @@ const handleSizeChange = (val) => {
 
 const handlePageChange = (val) => {
   currentPage.value = val
+
+  // 滚动到容器顶部
+  if (listContainer.value) {
+    // listContainer.value.scrollTop = 0
+    listContainer.value.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 
 // 监听初始时间范围变化（父组件修改时同步）

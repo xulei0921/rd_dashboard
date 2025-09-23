@@ -106,14 +106,18 @@
       <el-col :span="16" :xs="24" :md="16">
         <el-card :border="false" class="chart-card">
           <div class="card-header">
-            <h3 class="card-title">项目进度趋势</h3>
+            <h3 class="card-title" v-if="progressChartType == 'progress'">项目进度趋势</h3>
+            <h3 class="card-title" v-else>项目工时消耗</h3>
             <el-radio-group v-model="progressChartType" size="small">
               <el-radio-button label="progress">项目进度</el-radio-button>
               <el-radio-button label="hours">工时消耗</el-radio-button>
             </el-radio-group>
           </div>
-          <div class="chart-container-1">
+          <div class="chart-container-1" v-if="progressChartType == 'progress'">
             <ProjectProgressChart />
+          </div>
+          <div class="chart-container-1" v-else>
+            <ProjectHoursChart />
           </div>
         </el-card>
       </el-col>
@@ -215,6 +219,7 @@ import TeamHoursComparison from '../components/dashboard/TeamHoursComparison.vue
 import ProjectTimeline from '../components/dashboard/ProjectTimeline.vue'
 import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
 import FullRankingDialog from '@/components/dashboard/FullRankingDialog.vue'
+import ProjectHoursChart from '@/components/dashboard/ProjectHoursChart.vue'
 
 import { useProjectStore, useEmployeeWorkHoursStore, useAppStore, useTeamStore } from '@/store'
 import { storeToRefs } from 'pinia'

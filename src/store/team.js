@@ -8,7 +8,7 @@ import {
 export const useTeamStore = defineStore('team', () => {
     const getTeamWorkHoursComparison = async () => {
         const res = await fetchTeamWorkHoursComparison()
-        console.log(res)
+        // console.log(res)
     }
 
     return {

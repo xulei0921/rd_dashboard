@@ -14,7 +14,7 @@
     </div>
     <!-- 图表容器 -->
     <!-- <canvas v-else ref="chartRef"></canvas> -->
-    <div v-else class="canvas-container">
+     <div v-else class="canvas-container">
       <el-input
         v-model="searchKeyword"
         placeholder="搜索项目名称..."
@@ -67,36 +67,36 @@ const CHART_STYLE_TEMPLATE = {
       return isAllZero ? '#cccccc' : context.dataset.borderColor;
     },
   },
-  // 28个数据集的预设独立样式（按后端 series 顺序配置）
+  // 每个数据集的独立样式（按后端 series 顺序配置，28个数据集全覆盖）
   datasets: [
-    { borderColor: '#165DFF', backgroundColor: 'rgba(22, 93, 255, 0.1)' },
-    { borderColor: '#00B42A', backgroundColor: 'rgba(0, 180, 42, 0.1)' },
-    { borderColor: '#FF7D00', backgroundColor: 'rgba(255, 125, 0, 0.1)' },
-    { borderColor: '#7E57C2', backgroundColor: 'rgba(126, 87, 194, 0.1)' },
-    { borderColor: '#FF4D4F', backgroundColor: 'rgba(255, 77, 79, 0.1)' },
-    { borderColor: '#1890FF', backgroundColor: 'rgba(24, 144, 255, 0.1)' },
-    { borderColor: '#00C48C', backgroundColor: 'rgba(0, 196, 140, 0.1)' },
-    { borderColor: '#FF9F43', backgroundColor: 'rgba(255, 159, 67, 0.1)' },
-    { borderColor: '#6C5CE7', backgroundColor: 'rgba(108, 92, 231, 0.1)' },
-    { borderColor: '#A29BFE', backgroundColor: 'rgba(162, 155, 254, 0.1)' },
-    { borderColor: '#FD79A8', backgroundColor: 'rgba(253, 121, 168, 0.1)' },
-    { borderColor: '#00D2D3', backgroundColor: 'rgba(0, 210, 211, 0.1)' },
-    { borderColor: '#FF6B6B', backgroundColor: 'rgba(255, 107, 107, 0.1)' },
-    { borderColor: '#4ECDC4', backgroundColor: 'rgba(78, 205, 196, 0.1)' },
-    { borderColor: '#45B7D1', backgroundColor: 'rgba(69, 183, 209, 0.1)' },
-    { borderColor: '#96CEB4', backgroundColor: 'rgba(150, 206, 180, 0.1)' },
-    { borderColor: '#FFEAA7', backgroundColor: 'rgba(255, 234, 167, 0.1)' },
-    { borderColor: '#DDA0DD', backgroundColor: 'rgba(221, 160, 221, 0.1)' },
-    { borderColor: '#98D8C8', backgroundColor: 'rgba(152, 216, 200, 0.1)' },
-    { borderColor: '#F7DC6F', backgroundColor: 'rgba(247, 220, 111, 0.1)' },
-    { borderColor: '#BB8FCE', backgroundColor: 'rgba(187, 143, 206, 0.1)' },
-    { borderColor: '#85C1E9', backgroundColor: 'rgba(133, 193, 233, 0.1)' },
-    { borderColor: '#F8C471', backgroundColor: 'rgba(248, 196, 113, 0.1)' },
-    { borderColor: '#82E0AA', backgroundColor: 'rgba(130, 224, 170, 0.1)' },
-    { borderColor: '#F1948A', backgroundColor: 'rgba(241, 148, 138, 0.1)' },
-    { borderColor: '#ABEBC6', backgroundColor: 'rgba(171, 235, 198, 0.1)' },
-    { borderColor: '#85C1E9', backgroundColor: 'rgba(133, 193, 233, 0.1)' },
-    { borderColor: '#F7DC6F', backgroundColor: 'rgba(247, 220, 111, 0.1)' }
+    { borderColor: '#165DFF', backgroundColor: 'rgba(22, 93, 255, 0.1)' }, // 综合用能管理平台
+    { borderColor: '#00B42A', backgroundColor: 'rgba(0, 180, 42, 0.1)' }, // 管道任务
+    { borderColor: '#FF7D00', backgroundColor: 'rgba(255, 125, 0, 0.1)' }, // kafka集群管理
+    { borderColor: '#7E57C2', backgroundColor: 'rgba(126, 87, 194, 0.1)' }, // 归集运维
+    { borderColor: '#FF4D4F', backgroundColor: 'rgba(255, 77, 79, 0.1)' }, // 钱江宿舍项目
+    { borderColor: '#1890FF', backgroundColor: 'rgba(24, 144, 255, 0.1)' }, // 需求对接
+    { borderColor: '#00C48C', backgroundColor: 'rgba(0, 196, 140, 0.1)' }, // 钱江宿舍水电表对接
+    { borderColor: '#FF9F43', backgroundColor: 'rgba(255, 159, 67, 0.1)' }, // 路桥群创
+    { borderColor: '#6C5CE7', backgroundColor: 'rgba(108, 92, 231, 0.1)' }, // 企业用能New
+    { borderColor: '#A29BFE', backgroundColor: 'rgba(162, 155, 254, 0.1)' }, // 企业用能
+    { borderColor: '#FD79A8', backgroundColor: 'rgba(253, 121, 168, 0.1)' }, // 数据归集看板
+    { borderColor: '#00D2D3', backgroundColor: 'rgba(0, 210, 211, 0.1)' }, // 城投整体需求迭代
+    { borderColor: '#FF6B6B', backgroundColor: 'rgba(255, 107, 107, 0.1)' }, // 数字档案【托管】
+    { borderColor: '#4ECDC4', backgroundColor: 'rgba(78, 205, 196, 0.1)' }, // 数据归集平台
+    { borderColor: '#45B7D1', backgroundColor: 'rgba(69, 183, 209, 0.1)' }, // 储能
+    { borderColor: '#96CEB4', backgroundColor: 'rgba(150, 206, 180, 0.1)' }, // 企业用能光伏
+    { borderColor: '#FFEAA7', backgroundColor: 'rgba(255, 234, 167, 0.1)' }, // 运维管理平台
+    { borderColor: '#DDA0DD', backgroundColor: 'rgba(221, 160, 221, 0.1)' }, // 消息推送看板
+    { borderColor: '#98D8C8', backgroundColor: 'rgba(152, 216, 200, 0.1)' }, // 数据轻轨
+    { borderColor: '#F7DC6F', backgroundColor: 'rgba(247, 220, 111, 0.1)' }, // 光伏功能前后端迁移
+    { borderColor: '#BB8FCE', backgroundColor: 'rgba(187, 143, 206, 0.1)' }, // 光伏小程序迭代
+    { borderColor: '#85C1E9', backgroundColor: 'rgba(133, 193, 233, 0.1)' }, // 标准接口
+    { borderColor: '#F8C471', backgroundColor: 'rgba(248, 196, 113, 0.1)' }, // 数据资产管理平台
+    { borderColor: '#82E0AA', backgroundColor: 'rgba(130, 224, 170, 0.1)' }, // 设备对接（云牧）
+    { borderColor: '#F1948A', backgroundColor: 'rgba(241, 148, 138, 0.1)' }, // 分级分类
+    { borderColor: '#ABEBC6', backgroundColor: 'rgba(171, 235, 198, 0.1)' }, // 历史bug修复及运维
+    { borderColor: '#85C1E9', backgroundColor: 'rgba(133, 193, 233, 0.1)' }, // 运维管理平台V1.6.4
+    { borderColor: '#F7DC6F', backgroundColor: 'rgba(247, 220, 111, 0.1)' }  // 企业用能管理平台
   ],
   // 兜底样式（若后端 series 数量超预期，用此样式）
   fallback: {
@@ -173,7 +173,7 @@ const mergeDataAndStyle = (backendMonths, backendSeries) => {
       ...CHART_STYLE_TEMPLATE.common,
       ...targetStyle,
       label: backendItem.name || `项目${index + 1}`, // 用后端的 name 作为图例名称
-      data: backendItem.data || [] // 用后端的 data 作为图表数据
+      data: backendItem.monthlyHours || [] // 用后端的 monthlyHours 作为图表数据
     }
   })
 
@@ -215,7 +215,7 @@ const createOrUpdateChart = () => {
             pointStyle: 'circle',
             maxHeight: 400, // 图例最大高度
             overflow: 'auto' // 超出高度时滚动
-          },
+          }
         },
         // 提示框配置（鼠标悬浮显示详情）
         tooltip: {
@@ -223,13 +223,13 @@ const createOrUpdateChart = () => {
           intersect: false, // 不要求鼠标精准 hover 到数据点
           callbacks: {
             // 自定义提示框内容（显示项目名 + 进度百分比）
-            label: (context) => `${context.dataset.label}: ${context.parsed.y || 0}%`
+            label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(1) || 0}小时`
           }
         },
         // 标题配置（图表顶部标题）
         title: {
           display: true,
-          text: '各项目进度趋势图（1-9月）',
+          text: '各项目工时消耗图（1-9月）',
           font: { size: 16, weight: 'bold' },
           padding: { bottom: 30 }
         }
@@ -248,11 +248,10 @@ const createOrUpdateChart = () => {
           },
           title: {
             display: true,
-            text: '完成进度 (%)' // y轴标题
+            text: '工时消耗 (小时)' // y轴标题
           },
           ticks: {
-            // 自定义y轴刻度（显示百分比符号）
-            callback: (value) => `${value}%`
+            // callback: (value) => `${value}%`
           },
           grid: {
             color: 'rgba(0, 0, 0, 0.05)' // 网格线样式（淡灰色，不干扰视觉）
@@ -337,13 +336,13 @@ watch(searchKeyword, (keyword) => {
           intersect: false, // 不要求鼠标精准 hover 到数据点
           callbacks: {
             // 自定义提示框内容（显示项目名 + 进度百分比）
-            label: (context) => `${context.dataset.label}: ${context.parsed.y || 0}%`
+            label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(1) || 0}小时`
           }
         },
         // 标题配置（图表顶部标题）
         title: {
           display: true,
-          text: '各项目进度趋势图（1-9月）',
+          text: '各项目工时消耗图（1-9月）',
           font: { size: 16, weight: 'bold' },
           padding: { bottom: 30 }
         }
@@ -362,11 +361,10 @@ watch(searchKeyword, (keyword) => {
           },
           title: {
             display: true,
-            text: '完成进度 (%)' // y轴标题
+            text: '工时消耗 (小时)' // y轴标题
           },
           ticks: {
-            // 自定义y轴刻度（显示百分比符号）
-            callback: (value) => `${value}%`
+            // callback: (value) => `${value}`
           },
           grid: {
             color: 'rgba(0, 0, 0, 0.05)' // 网格线样式（淡灰色，不干扰视觉）
