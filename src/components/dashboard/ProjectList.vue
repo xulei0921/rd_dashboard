@@ -13,13 +13,13 @@
         </div>
 
         <!-- 无数据状态 -->
-        <!-- <div v-if="filteredProjectDetails.length === 0" class="empty">暂无项目数据</div> -->
+        <div v-if="filteredProjectDetails.length === 0" class="empty">暂无项目数据</div>
 
         <ProjectItem v-for="value in filteredProjectDetails"
             :key="value.id"
             :projectId="value.id"
         ></ProjectItem>
-        <button class="load-more">查看更多项目</button>
+        <!-- <button class="load-more">查看更多项目</button> -->
     </template>
   </div>
 </template>
@@ -32,7 +32,8 @@ import { useProjectStore } from "@/store";
 
 const searchKeyWords = ref('')
 const projectStore = useProjectStore()
-// const filteredProjectDetails = ref([])
+const filteredProjectDetails = ref([])
+const allProjectDetails = ref([])
 const isLoading = ref(true)
 const hasError = ref(false)
 
@@ -44,30 +45,38 @@ const {
         getProjectDetails
       } = projectStore
 
-const filteredProjectDetails = computed(() => {
-    if (!projectDetails.value || projectDetails.value.length === 0) {
-        return []
-    }
+// const filteredProjectDetails = computed(() => {
+//     if (!projectDetails.value || projectDetails.value.length === 0) {
+//         return []
+//     }
 
-    if (!searchKeyWords) {
-        return projectDetails.value
-    }
-})
-     
-// watch(searchKeyWords, (keyword) => {
-//     if (!keyword) {
-//         filteredProjectDetails.value = projectDetails.value
-//         return
+//     if (!searchKeyWords) {
+//         return projectDetails.value
 //     }
 // })
+     
+watch(searchKeyWords, (keyword) => {
+    if (!keyword) {
+        filteredProjectDetails.value = allProjectDetails.value
+        return
+    } else {
+        // filteredProjectDetails.value = []
+        // console.log('test')
+
+        const kword = keyword.trim().toLowerCase()
+        filteredProjectDetails.value = allProjectDetails.value.filter(item => item.projectName.includes(kword))
+    }
+})
 
 onMounted (async () => {
     try {
         isLoading.value = true
         hasError.value = false
         await getProjectDetails()
-        // filteredProjectDetails.value = projectDetails.value
+        filteredProjectDetails.value = projectDetails.value
         // console.log(filteredProjectDetails.value)
+        allProjectDetails.value = projectDetails.value
+        // console.log(allProjectDetails.value)
     } catch (error) {
         console.log('获取项目详情失败:', error)
         hasError.value = true
@@ -106,5 +115,20 @@ onMounted (async () => {
   border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
+}
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+.error {
+    text-align: center;
+    padding: 40px;
+    color: #ff4d4f;
+}
+.empty {
+    text-align: center;
+    padding: 40px;
+    color: #999;
 }
 </style>

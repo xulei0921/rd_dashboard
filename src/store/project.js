@@ -124,8 +124,8 @@ export const useProjectStore = defineStore('big-project', () => {
             const res = await request.get('project/details')
             // console.log(res)
             if (res.code == 200 && res.success) {
-                projectDetails.value = res.data.projects || 
-                console.log(projectDetails.value)
+                projectDetails.value = res.data.projects || []
+                // console.log(projectDetails.value)
             }
         } catch (error) {
             console.error('获取项目详情失败', error)

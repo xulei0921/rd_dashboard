@@ -7,7 +7,7 @@
         <div class="project-meta">
           <span class="meta-item">
             <User class="icon" />
-            项目经理: {{ currentProject?.projectManager || '未知' }}
+            项目负责人: {{ currentProject?.projectManager || '未知' }}
           </span>
           <span class="meta-item">
             <Calendar class="icon" />
@@ -23,7 +23,7 @@
           </span>
           <span class="meta-item">
             <Timer class="icon" />
-            已消耗工时: {{ currentProject?.totalConsumed || 0 }}天
+            已消耗工时: {{ currentProject?.totalConsumed || 0 }}小时
           </span>
         </div>
       </div>
@@ -42,10 +42,10 @@
     <div class="progress-overview">
       <div class="progress-info">
         <span>项目总进度</span>
-        <span class="progress-value">{{ Math.round(currentProject?.totalProgress || 0) }}%</span>
+        <!-- <span class="progress-value">{{ currentProject?.totalProgress.toFixed(1) || 0 }}%</span> -->
       </div>
-      <el-progress 
-        :percentage="currentProject?.totalProgress || 0" 
+      <el-progress
+        :percentage="currentProject?.totalProgress.toFixed(1) || 0" 
         stroke-width="8"
         :stroke-color="getProgressColor(currentProject?.totalProgress || 0)"
       />

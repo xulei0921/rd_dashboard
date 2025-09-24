@@ -201,6 +201,7 @@
       </el-col>
     </el-row> -->
 
+    <!-- 项目进度详情与里程碑 -->
     <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="24" :xs="24" :md="24">
         <el-card :border="false" class="timeline-card">
@@ -482,8 +483,25 @@ onUnmounted(() => {
 
 .timeline-card {
   /* height: 475px; */
-  height: 800px;
+  height: 820px;
   overflow: auto;
+}
+
+.bottom-gradient-shadow {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.15)
+    transparent
+  );
+
+  pointer-events: none;
+  z-index: 10;
 }
 
 .export-btn {
