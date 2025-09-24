@@ -30,6 +30,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Chart, registerables } from 'chart.js'
+import { generateRandomColorPairs } from '@/utils/colorUtils'
 
 // 1. 注册 Chart.js 必要组件
 Chart.register(...registerables)

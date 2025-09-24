@@ -43,7 +43,7 @@
           icon-color="#165DFF"
           iconBgColor="#E8F3FF"
           trend="increase"
-          trend-text="0个新项目"
+          :trend-text="`${newProjectCount}个新项目`"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
@@ -54,7 +54,7 @@
           icon-color="#FF7D00"
           iconBgColor="#FFF2E5"
           trend="warning"
-          trend-text="2个延期"
+          :trend-text="`${delayProjectCount}个延期`"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
@@ -76,7 +76,7 @@
           icon-color="#722ED1"
           iconBgColor="#F3E8FF"
           trend="clock"
-          trend-text="本月124人天"
+          :trend-text="`${chRankingTimeRange}${currentWorkHours}小时`"
         />
       </el-col>
       <el-col :span="4" :xs="12" :sm="8" :md="6" :lg="4">
@@ -185,7 +185,7 @@
     </el-row>
     
     <!-- 项目详情与员工统计 -->
-    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
+    <!-- <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="10" :xs="24" :md="10">
         <el-card :border="false" class="timeline-card">
           <ProjectTimeline :project="projectFilter !== 'all' ? projectFilter : 'productA'" />
@@ -199,7 +199,16 @@
           <EmployeeStatsTable ref="statsTableRef" />
         </el-card>
       </el-col>
+    </el-row> -->
+
+    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
+      <el-col :span="24" :xs="24" :md="24">
+        <el-card :border="false" class="timeline-card">
+          <ProjectList></ProjectList>
+        </el-card>
+      </el-col>
     </el-row>
+
   </div>
 </template>
 
@@ -220,6 +229,7 @@ import ProjectTimeline from '../components/dashboard/ProjectTimeline.vue'
 import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
 import FullRankingDialog from '@/components/dashboard/FullRankingDialog.vue'
 import ProjectHoursChart from '@/components/dashboard/ProjectHoursChart.vue'
+import ProjectList from '@/components/dashboard/ProjectList.vue'
 
 import { useProjectStore, useEmployeeWorkHoursStore, useAppStore, useTeamStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -239,6 +249,8 @@ const {
         completionRate,
         totalTasks,
         totalCompletedTasks,
+        newProjectCount,
+        delayProjectCount
       } = storeToRefs(projectStore)
 
 const { 
@@ -247,7 +259,9 @@ const {
         getOngoingProjectsCount, 
         getCompletedProjCount ,
         getTotalManDaysCount,
-        getCompMilestonesCount
+        getCompMilestonesCount,
+        getNewProjectCount,
+        getDelayProjectCount
       } = projectStore
 
 const {
@@ -256,7 +270,8 @@ const {
   
 const {
         employeeRanking,
-        loading
+        loading,
+        currentWorkHours
       } = storeToRefs(workHourStore)
 
 const {
@@ -271,6 +286,7 @@ const rankingTimeRange = ref('month')
 const lastUpdateTime = ref('2025/9/14')
 const statsTableRef = ref(null)
 const isViewMore = ref(false)
+const chRankingTimeRange = ref('')
 const loadingStatus = reactive({
   mainData: false,
   chartData: false
@@ -286,6 +302,20 @@ const openFullRanking = () => {
 
 watch(rankingTimeRange, (newVal) => {
   fetchEmployeeRanking(newVal);
+  switch(newVal){
+    case "month":
+      chRankingTimeRange.value = "本月"
+      break
+    case "lastMonth":
+      chRankingTimeRange.value = "上月"
+      break
+    case "quarter":
+      chRankingTimeRange.value = "本季度"
+      break
+    case "year":
+      chRankingTimeRange.value = "本年度"
+      break
+  }
 }, { immediate: true }); // immediate: true 确保初始加载
 
 watch(
@@ -322,7 +352,9 @@ const refreshAllData = async () => {
       getTotalManDaysCount(),
       fetchEmployeeRanking(),
       getCompMilestonesCount(),
-      getTeamWorkHoursComparison()
+      getTeamWorkHoursComparison(),
+      getNewProjectCount(),
+      getDelayProjectCount()
     ])
     
     // 刷新表格数据
@@ -332,6 +364,7 @@ const refreshAllData = async () => {
     
     // 更新最后更新时间
     lastUpdateTime.value = formatDateTime()
+    console.log(employeeRanking.value)
   } catch (error) {
     console.error('数据刷新失败:', error)
   } finally {
@@ -446,7 +479,8 @@ onUnmounted(() => {
 }
 
 .timeline-card {
-  height: 475px;
+  /* height: 475px; */
+  height: 800px;
   overflow: auto;
 }
 

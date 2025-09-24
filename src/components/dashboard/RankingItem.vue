@@ -91,17 +91,30 @@ const trendClass = computed(() => {
 
 .rank-1 {
   background-color: #fffbe6;
-  border: 1px solid #ffe880;
+  border: 1px solid rgb(208, 189, 102);
 }
+
+.rank-1:hover {
+  background-color: #f7efcb;
+}
+
 
 .rank-2 {
   background-color: #F9FAFB;
   border: 1px solid #e5e6eb;
 }
 
+.rank-2:hover {
+  background-color: #eff5fb;
+}
+
 .rank-3 {
   background-color: #fff2e8;
   border: 1px solid #ffd8bf;
+}
+
+.rank-3:hover {
+  background-color: #fbe7d9;
 }
 
 .rank-common {

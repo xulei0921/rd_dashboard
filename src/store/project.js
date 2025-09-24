@@ -8,7 +8,9 @@ import {
         fetchOngoingProjectsCount,
         fetchCompletedProjCount,
         fetchTotalManDaysCount,
-        fetchCompMilestonesCount
+        fetchCompMilestonesCount,
+        fetchNewProjectCount,
+        fetchDelayProjectCount
        } from "@/api/project";
 
 // 项目模块
@@ -24,6 +26,8 @@ export const useProjectStore = defineStore('big-project', () => {
     const totalConsumed = ref([])
     const projectName = ref([])
     const projectDeatils = ref([])
+    const newProjectCount = ref(0)
+    const delayProjectCount = ref(0)
 
     // 获取总项目数
     const getTotalProjects = async () => {
@@ -128,6 +132,20 @@ export const useProjectStore = defineStore('big-project', () => {
         }
     }
 
+    // 获取当月新项目的数量
+    const getNewProjectCount = async () => {
+        const res = await fetchNewProjectCount()
+        // console.log(res)
+        newProjectCount.value = res.data.thisMonthNewProjects
+    }
+
+    // 获取目前延期的所有项目数量
+    const getDelayProjectCount = async () => {
+        const res = await fetchDelayProjectCount()
+        // console.log(res)
+        delayProjectCount.value = res.data
+    }
+
     return {
         totalProjects,
         totalUserCount,
@@ -141,6 +159,8 @@ export const useProjectStore = defineStore('big-project', () => {
         projectName,
         totalConsumed,
         projectDeatils,
+        newProjectCount,
+        delayProjectCount,
         getTotalProjects,
         getTotalUserCount,
         getOngoingProjectsCount,
@@ -148,6 +168,8 @@ export const useProjectStore = defineStore('big-project', () => {
         getTotalManDaysCount,
         getCompMilestonesCount,
         fetchProjWorkHoursDistribution,
-        getProjectDetails
+        getProjectDetails,
+        getNewProjectCount,
+        getDelayProjectCount
     }
 })

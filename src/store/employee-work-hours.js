@@ -7,6 +7,7 @@ export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () =
   // 状态
   const employeeRanking = ref([]); // 排名数据
   const loading = ref(false); // 加载状态
+  const currentWorkHours = ref(0) // 本月总工时
 
   // 时间过滤器映射（前端value -> 后端timeFilter）
   const timeFilterMap = {
@@ -50,6 +51,16 @@ export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () =
             avatar: `https://picsum.photos/id/${index + 100}/200/200`
           };
         });
+
+        currentWorkHours.value = employeeRanking.value.reduce((sum, item) => {
+          // 提取 hours 字段中的数字部分
+          const hoursStr = item.hours.replace("小时", "")
+
+          const hour = Number(hoursStr)
+
+           return sum + (isNaN(hour) ? 0 : hour)
+        }, 0)
+
       }
     } catch (error) {
       console.error('获取员工工时排名失败:', error);
@@ -62,6 +73,7 @@ export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () =
   return {
     employeeRanking,
     loading,
+    currentWorkHours,
     fetchEmployeeRanking
   };
 });

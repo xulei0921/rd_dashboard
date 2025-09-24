@@ -37,5 +37,15 @@ export const fetchProjectProgressTrend = () => {
 
 // 获取项目工时分布数据
 export const getProjWorkHoursDistribution = () => {
-    return request.get('/data/projectWorkHoursDistribution')
+    return request.get('data/projectWorkHoursDistribution')
+}
+
+// 获取当月新项目的数量
+export const fetchNewProjectCount = () => {
+    return request.get('project/monthlyNewProjects')
+}
+
+// 获取目前延期的所有项目数量
+export const fetchDelayProjectCount = () => {
+    return request.get('project/delayedProjects')
 }
