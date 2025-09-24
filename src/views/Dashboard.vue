@@ -204,7 +204,9 @@
     <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="24" :xs="24" :md="24">
         <el-card :border="false" class="timeline-card">
-          <ProjectList></ProjectList>
+          <ProjectList
+            :project-id="2"
+          ></ProjectList>
         </el-card>
       </el-col>
     </el-row>
@@ -364,7 +366,7 @@ const refreshAllData = async () => {
     
     // 更新最后更新时间
     lastUpdateTime.value = formatDateTime()
-    console.log(employeeRanking.value)
+    // console.log(employeeRanking.value)
   } catch (error) {
     console.error('数据刷新失败:', error)
   } finally {

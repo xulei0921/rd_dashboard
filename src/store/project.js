@@ -25,7 +25,7 @@ export const useProjectStore = defineStore('big-project', () => {
     const totalCompletedTasks = ref(0)
     const totalConsumed = ref([])
     const projectName = ref([])
-    const projectDeatils = ref([])
+    const projectDetails = ref([])
     const newProjectCount = ref(0)
     const delayProjectCount = ref(0)
 
@@ -124,8 +124,8 @@ export const useProjectStore = defineStore('big-project', () => {
             const res = await request.get('project/details')
             // console.log(res)
             if (res.code == 200 && res.success) {
-                projectDeatils.value = res.data.projects || 
-                console.log(projectDeatils.value)
+                projectDetails.value = res.data.projects || 
+                console.log(projectDetails.value)
             }
         } catch (error) {
             console.error('获取项目详情失败', error)
@@ -158,7 +158,7 @@ export const useProjectStore = defineStore('big-project', () => {
         totalCompletedTasks,
         projectName,
         totalConsumed,
-        projectDeatils,
+        projectDetails,
         newProjectCount,
         delayProjectCount,
         getTotalProjects,
