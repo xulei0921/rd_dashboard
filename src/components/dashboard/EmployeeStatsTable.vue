@@ -10,7 +10,7 @@
       <el-table-column 
         prop="name" 
         label="员工姓名" 
-        width="120"
+        width="220"
       >
         <template #default="scope">
           <div class="employee-info">
@@ -21,9 +21,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="team" label="所属团队" width="120"></el-table-column>
-      <el-table-column prop="project" label="负责项目" width="120"></el-table-column>
-      <el-table-column prop="progress" label="任务进度" width="160">
+      <el-table-column prop="team" label="所属团队" width="220"></el-table-column>
+      <el-table-column prop="project" label="负责项目" width="406"></el-table-column>
+      <el-table-column prop="progress" label="任务进度" width="260">
         <template #default="scope">
           <div class="progress-container">
             <el-progress 
@@ -35,9 +35,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="hours" label="本月工时(天)" width="130"></el-table-column>
-      <el-table-column prop="overtime" label="加班工时(天)" width="130"></el-table-column>
-      <el-table-column prop="status" label="状态" width="100">
+      <el-table-column prop="hours" label="本月工时(天)" width="140"></el-table-column>
+      <el-table-column prop="overtime" label="加班工时(天)" width="140"></el-table-column>
+      <el-table-column prop="status" label="状态" width="110">
         <template #default="scope">
           <el-tag 
             :type="scope.row.status === 'onTime' ? 'success' : (scope.row.status === 'delayed' ? 'danger' : 'warning')"

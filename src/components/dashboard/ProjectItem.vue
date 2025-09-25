@@ -139,7 +139,7 @@ const projectStore = useProjectStore()
 const { projectDetails } = storeToRefs(projectStore)
 const { getProjectDetails } = projectStore
 
-// Props
+// 使用Props 从父组件接收数据
 const props = defineProps({
   projectId: {
     type: Number,
@@ -151,7 +151,7 @@ const props = defineProps({
 const isLoading = ref(true)
 const taskFilter = ref('all')
 const currentProject = ref(null)
-// 控制显示项目里程碑
+// 控制项目里程碑的显示
 const isShowMilestone = ref(false)
 
 // 获取项目详情数据
@@ -159,7 +159,7 @@ const fetchProjectData = async () => {
   try {
     isLoading.value = true
     await getProjectDetails()
-    // 从所有项目中筛选当前项目
+    // 从所有项目中根据父组件传的项目id筛选当前项目
     currentProject.value = projectDetails.value.find(
       project => project.id === props.projectId
     )

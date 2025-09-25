@@ -183,7 +183,31 @@
         </el-card>
       </el-col>
     </el-row>
-    
+
+    <!-- 项目进度详情与里程碑 -->
+    <el-row :gutter="16" class="mb-4 anchor" style="margin-top: 25px;">
+      <!-- 回滚按钮 -->
+      <button
+        class="back-to-top"
+        v-if="showBackToTop"
+        @click="scrollToComponentTop"
+      >
+      <el-icon :size="20"><Top /></el-icon></button>
+      <el-col :span="24" :xs="24" :md="24">
+        <el-card :border="false" class="timeline-card" ref="componentRef">
+          <ProjectList
+          ></ProjectList>
+          <!-- 底部阴影效果 -->
+          <div class="bottom-gradient-shadow" v-if="isViewMore">
+            <el-button size="large" type="text" class="view-more-btn2" @click="showFullProjects">查看更多项目<el-icon><ArrowDownBold /></el-icon></el-button>
+          </div>
+          <div class="bottom-light" v-else>
+            <el-button round class="hide-btn" @click="hideFullProjects">折叠项目<el-icon><ArrowUpBold /></el-icon></el-button>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
     <!-- 员工统计 -->
     <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="24" :xs="24" :md="24">
@@ -192,28 +216,6 @@
             <h3 class="card-title">员工进度与工时统计</h3>
           </div>
           <EmployeeStatsTable ref="statsTableRef" />
-        </el-card>
-      </el-col>
-    </el-row>
-
-    <!-- 项目进度详情与里程碑 -->
-    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
-      <el-col :span="24" :xs="24" :md="24">
-        <el-card :border="false" class="timeline-card" ref="componentRef">
-          <button
-            class="back-to-top"
-            v-if="showBackToTop"
-            @click="scrollToComponentTop"
-          >
-            <el-icon :size="20"><Top /></el-icon></button>
-          <ProjectList
-          ></ProjectList>
-          <div class="bottom-gradient-shadow" v-if="isViewMore">
-            <el-button size="large" type="text" class="view-more-btn2" @click="showFullProjects">查看更多项目<el-icon><ArrowDownBold /></el-icon></el-button>
-          </div>
-          <div class="bottom-light" v-else>
-            <el-button round class="hide-btn" @click="hideFullProjects">折叠项目<el-icon><ArrowUpBold /></el-icon></el-button>
-          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -234,7 +236,6 @@ import ProjectProgressChart from '../components/dashboard/ProjectProgressChart.v
 import RankingItem from '../components/dashboard/RankingItem.vue'
 import ProjectHoursDistribution from '../components/dashboard/ProjectHoursDistribution.vue'
 import TeamHoursComparison from '../components/dashboard/TeamHoursComparison.vue'
-import ProjectTimeline from '../components/dashboard/ProjectTimeline.vue'
 import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
 import FullRankingDialog from '@/components/dashboard/FullRankingDialog.vue'
 import ProjectHoursChart from '@/components/dashboard/ProjectHoursChart.vue'
@@ -538,6 +539,7 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+
 .export-btn {
   display: flex;
   align-items: center;
@@ -560,12 +562,18 @@ onUnmounted(() => {
   }
 }
 
+.anchor {
+  position: relative;
+}
+
 .back-to-top {
-  /* position: absolute; */
-  position: fixed;
+  position: absolute;
+  right: -55px;
+  bottom: 420px;
+
+  /* position: fixed;
   right: 60px;
-  bottom: 150px;
-  /* bottom: 20px; */
+  bottom: 150px; */
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -595,7 +603,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  width: 98.6%;
+  width: 98.9%;
   margin: 0 auto;
   height: 80px; /* 阴影高度，可调整 */
   border-radius: 0 0 6px 6px;

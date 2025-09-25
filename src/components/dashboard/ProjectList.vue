@@ -16,6 +16,7 @@
         <!-- 无数据状态 -->
         <div v-if="filteredProjectDetails.length === 0" class="empty">暂无项目数据</div>
 
+        <!-- 以项目为单位渲染 -->
         <ProjectItem v-for="value in filteredProjectDetails"
             :key="value.id"
             :projectId="value.id"
@@ -57,21 +58,28 @@ const {
 //     }
 // })
 
+// 监听搜索输入框的输入
 watch(searchKeyWords, (keyword) => {
+    // 如果搜索框没有输入搜索关键字，直接返回所有项目数据
     if (!keyword) {
-        filteredProjectDetails.value = allProjectDetails.value
-        return
+      filteredProjectDetails.value = allProjectDetails.value
+      return
     } else {
-        // filteredProjectDetails.value = []
-        // console.log('test')
+      // 测试watch监听是否生效 
+      // filteredProjectDetails.value = []
+      // console.log('test')
 
-        const kword = keyword.trim().toLowerCase()
-        filteredProjectDetails.value = allProjectDetails.value.filter(item => item.projectName.includes(kword))
+      // 将搜索关键字左右两边去除空格并为小写
+      const kword = keyword.trim().toLowerCase()
+      // 将项目名包含关键字的所有项目筛选过滤出来
+      filteredProjectDetails.value = allProjectDetails.value.filter(item => item.projectName.toLowerCase().includes(kword))
     }
 })
 
 onMounted (async () => {
+    // 从后端获取项目数据
     try {
+        // 重置加载状态和错误状态
         isLoading.value = true
         hasError.value = false
         await getProjectDetails()
@@ -85,6 +93,7 @@ onMounted (async () => {
         console.log('获取项目详情失败:', error)
         hasError.value = true
     } finally {
+        // 无论获取结果如何，将加载状态取消
         isLoading.value = false
     }
 })
