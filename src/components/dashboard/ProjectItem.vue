@@ -35,6 +35,13 @@
         class="status-tag"
       >
         {{ getStatusText(currentProject?.projectStatus) }}
+
+        <span class="meta-item-switch">
+          <el-switch
+            v-model="isShowMilestone"
+            inactive-text="显示项目里程碑"
+          />
+        </span>
       </el-tag>
     </div>
     
@@ -52,7 +59,7 @@
     </div>
     
     <!-- 项目任务时间线 -->
-    <div class="timeline-header">
+    <div class="timeline-header" v-if="isShowMilestone">
       <h4>项目任务里程碑</h4>
       <el-select 
         v-model="taskFilter" 
@@ -64,14 +71,15 @@
         <el-option label="已完成" value="done"></el-option>
         <el-option label="进行中" value="doing"></el-option>
         <el-option label="待开始" value="wait"></el-option>
+        <el-option label="已延期" value="delayed"></el-option>
         <el-option label="已关闭" value="closed"></el-option>
       </el-select>
     </div>
     
-    <div class="timeline-container">
+    <div class="timeline-container" v-if="isShowMilestone" >
       <div class="timeline-line"></div>
       
-      <div 
+      <div
         v-for="(task, index) in filteredTasks" 
         :key="index" 
         class="timeline-item"
@@ -109,7 +117,7 @@
       </div>
       
       <div v-if="filteredTasks.length === 0 && !isLoading" class="empty-state">
-        <Empty description="暂无任务数据" />
+        <el-empty description="暂无任务数据" />
       </div>
       
       <div v-if="isLoading" class="loading-state">
@@ -126,7 +134,6 @@ import { storeToRefs } from 'pinia'
 import { 
   User, Calendar, Clock, Flag, Timer,  
 } from '@element-plus/icons-vue'
-// import { format } from 'date-fns' // 假设使用date-fns处理日期
 
 const projectStore = useProjectStore()
 const { projectDetails } = storeToRefs(projectStore)
@@ -144,6 +151,8 @@ const props = defineProps({
 const isLoading = ref(true)
 const taskFilter = ref('all')
 const currentProject = ref(null)
+// 控制显示项目里程碑
+const isShowMilestone = ref(false)
 
 // 获取项目详情数据
 const fetchProjectData = async () => {
@@ -210,6 +219,7 @@ const getStatusText = (status) => {
     'done': '已完成',
     'doing': '进行中',
     'wait': '待开始',
+    'delayed': '已延期',
     'closed': '已关闭'
   }
   return statusMap[status] || '未知状态'
@@ -221,6 +231,7 @@ const getStatusType = (status) => {
     'done': 'success',
     'doing': 'primary',
     'wait': 'info',
+    'delayed': 'error',
     'closed': 'warning'
   }
   return typeMap[status] || 'default'
@@ -235,7 +246,8 @@ const getTaskStatusColor = (status) => {
   const colorMap = {
     'done': '#52c41a',
     'doing': '#1890ff',
-    'wait': '#40a9ff',
+    'wait': '#A9A9A9',
+    'delayed': '#ff0000',
     'closed': '#faad14'
   }
   return colorMap[status] || '#8c8c8c'
@@ -295,12 +307,22 @@ onMounted(fetchProjectData)
   gap: 6px;
 }
 
+.meta-item-switch {
+  position: absolute;
+  top: 32px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .icon {
   width: 16px;
   height: 16px;
 }
 
 .status-tag {
+  position: relative;
   padding: 6px 12px;
   font-size: 14px;
 }
@@ -395,7 +417,11 @@ onMounted(fetchProjectData)
 }
 
 .status-wait .timeline-content {
-  border-left-color: #40a9ff;
+  border-left-color: #A9A9A9;
+}
+
+.status-delayed .timeline-content {
+  border-left-color: #ff0000
 }
 
 .status-closed .timeline-content {

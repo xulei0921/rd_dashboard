@@ -184,14 +184,9 @@
       </el-col>
     </el-row>
     
-    <!-- 项目详情与员工统计 -->
-    <!-- <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
-      <el-col :span="10" :xs="24" :md="10">
-        <el-card :border="false" class="timeline-card">
-          <ProjectTimeline :project="projectFilter !== 'all' ? projectFilter : 'productA'" />
-        </el-card>
-      </el-col>
-      <el-col :span="14" :xs="24" :md="14">
+    <!-- 员工统计 -->
+    <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
+      <el-col :span="24" :xs="24" :md="24">
         <el-card :border="false" class="table-card">
           <div class="card-header">
             <h3 class="card-title">员工进度与工时统计</h3>
@@ -199,15 +194,26 @@
           <EmployeeStatsTable ref="statsTableRef" />
         </el-card>
       </el-col>
-    </el-row> -->
+    </el-row>
 
     <!-- 项目进度详情与里程碑 -->
     <el-row :gutter="16" class="mb-4" style="margin-top: 25px;">
       <el-col :span="24" :xs="24" :md="24">
-        <el-card :border="false" class="timeline-card">
+        <el-card :border="false" class="timeline-card" ref="componentRef">
+          <button
+            class="back-to-top"
+            v-if="showBackToTop"
+            @click="scrollToComponentTop"
+          >
+            <el-icon :size="20"><Top /></el-icon></button>
           <ProjectList
-            :project-id="2"
           ></ProjectList>
+          <div class="bottom-gradient-shadow" v-if="isViewMore">
+            <el-button size="large" type="text" class="view-more-btn2" @click="showFullProjects">查看更多项目<el-icon><ArrowDownBold /></el-icon></el-button>
+          </div>
+          <div class="bottom-light" v-else>
+            <el-button round class="hide-btn" @click="hideFullProjects">折叠项目<el-icon><ArrowUpBold /></el-icon></el-button>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -219,7 +225,7 @@
 import { onMounted, ref, reactive, onUnmounted, watch } from 'vue'
 import { 
   Folder, Check, Clock, Flag, User, 
-  Download, ArrowRight, Loading, Top
+  Download, ArrowRight, Loading, Top, ArrowUpBold, ArrowDownBold
 } from '@element-plus/icons-vue'
 
 // 组件导入
@@ -288,8 +294,12 @@ const progressChartType = ref('progress')
 const rankingTimeRange = ref('month')
 const lastUpdateTime = ref('2025/9/14')
 const statsTableRef = ref(null)
-const isViewMore = ref(false)
+const isViewMore = ref(true)
 const chRankingTimeRange = ref('')
+const componentRef = ref(null)
+const showBackToTop = ref(false)
+// 滚动阈值
+const SCROLL_THRESHOLD = 300
 const loadingStatus = reactive({
   mainData: false,
   chartData: false
@@ -327,6 +337,42 @@ watch(
     refreshAllData() // 状态变化时执行刷新
   }
 )
+
+const scrollToComponentTop = () => {
+  if (componentRef.value.$el) {
+    componentRef.value.$el.scrollTo({
+      top: 0,
+      behavior: 'smooth' // 平滑滚动动画
+    })
+  }
+}
+
+// 监听滚动事件
+const handleScroll = () => {
+  if (componentRef.value.$el) {
+    // 当组件内滚动距离 > 阈值时，显示按钮
+    showBackToTop.value = componentRef.value.$el.scrollTop > SCROLL_THRESHOLD
+  }
+}
+
+// 控制显示所有项目
+const showFullProjects = () => {
+  isViewMore.value = false
+  // console.log(componentRef.value.$el.style)
+  if (componentRef.value.$el) {
+    componentRef.value.$el.style.overflow = 'auto'
+  }
+}
+
+// 控制隐藏所有项目
+const hideFullProjects = () => {
+  isViewMore.value = true
+  if (componentRef.value.$el) {
+    componentRef.value.$el.style.overflow = 'hidden'
+    // componentRef.value.$el.scrollTo
+    scrollToComponentTop()
+  }
+}
 
 // 格式化时间
 const formatDateTime = () => {
@@ -377,11 +423,15 @@ const refreshAllData = async () => {
 
 setInterval(() => {
   refreshAllData()
-  console.log('111')
+  // console.log('111')
 }, 1800000)
 
 // 初始加载
 onMounted(() => {
+  if (componentRef.value.$el) {
+    componentRef.value.$el.addEventListener('scroll', handleScroll)
+  }
+
   refreshAllData()
   
   // 监听父组件的刷新事件（来自MainLayout）
@@ -482,26 +532,10 @@ onUnmounted(() => {
 }
 
 .timeline-card {
+  /* position: relative; */
   /* height: 475px; */
   height: 820px;
-  overflow: auto;
-}
-
-.bottom-gradient-shadow {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 60px;
-
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.15)
-    transparent
-  );
-
-  pointer-events: none;
-  z-index: 10;
+  overflow: hidden;
 }
 
 .export-btn {
@@ -524,5 +558,90 @@ onUnmounted(() => {
   .chart-container {
     height: 250px;
   }
+}
+
+.back-to-top {
+  /* position: absolute; */
+  position: fixed;
+  right: 60px;
+  bottom: 150px;
+  /* bottom: 20px; */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #165DFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.3s, transform 0.3s;
+  opacity: 0.9;
+}
+
+/* 悬停效果 */
+.back-to-top:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* 底部固定渐变阴影 */
+.bottom-gradient-shadow {
+  /* 固定在页面底部 */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 98.6%;
+  margin: 0 auto;
+  height: 80px; /* 阴影高度，可调整 */
+  border-radius: 0 0 6px 6px;
+  
+  /* 渐变阴影：从透明到深色半透明 */
+  background: linear-gradient(
+    to top, 
+    rgba(0, 0, 0, 0.35),  /* 底部深色 */
+    transparent           /* 顶部透明 */
+  );
+  
+  /* 确保阴影在内容上方但不遮挡交互 */
+  pointer-events: none; /* 允许点击穿透阴影 */
+  z-index: 10; /* 调整层级，确保显示在内容之上 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-more-btn2 {
+  font-size: 16px;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 15;
+  pointer-events: auto;
+}
+
+.bottom-light {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: rgba(216, 216, 216, 0.08); */
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+  /* border-radius: 6px; */
+  height: 80px;
+}
+
+.hide-btn {
+  font-size: 16px;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 15;
+  pointer-events: auto;
 }
 </style>
