@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import request from '@/utils/request';
-import { getEmployeeRanking } from '@/api/employee'
+import { getEmployeeRanking, getEmployeeProgressList } from '@/api/employee'
 
 export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () => {
   // 状态
   const employeeRanking = ref([]); // 排名数据
   const loading = ref(false); // 加载状态
   const currentWorkHours = ref(0) // 本月总工时
+  const employeeData = ref([])
 
   // 时间过滤器映射（前端value -> 后端timeFilter）
   const timeFilterMap = {
@@ -70,10 +71,19 @@ export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () =
     }
   };
 
+  // 获取员工进度与工时统计
+  const fetchEmployeeProgressList = async () => {
+    const res = await getEmployeeProgressList()
+    console.log(res.data)
+    employeeData.value = res.data
+  }
+
   return {
     employeeRanking,
     loading,
     currentWorkHours,
-    fetchEmployeeRanking
+    employeeData,
+    fetchEmployeeRanking,
+    fetchEmployeeProgressList
   };
 });

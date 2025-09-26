@@ -54,7 +54,7 @@
       <el-progress
         :percentage="currentProject?.totalProgress.toFixed(1) || 0" 
         stroke-width="8"
-        :stroke-color="getProgressColor(currentProject?.totalProgress || 0)"
+        :color="getProgressColor(currentProject?.totalProgress || 0)"
       />
     </div>
     
@@ -89,7 +89,7 @@
         <div class="timeline-content">
           <div class="task-header">
             <div class="task-title">{{ task.name }}</div>
-            <el-tag 
+            <el-tag
               :type="getTaskStatusType(task.status)"
               size="small"
             >
@@ -103,7 +103,7 @@
               开始: {{ task.startDate ? formatDate(task.startDate) : '未设置' }}
             </span>
             <span>
-              <CheckCircle class="date-icon" />
+              <CircleCheck class="date-icon" />
               结束: {{ task.endDate ? formatDate(task.endDate) : '未设置' }}
             </span>
           </div>
@@ -132,7 +132,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useProjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { 
-  User, Calendar, Clock, Flag, Timer,  
+  User, Calendar, Clock, Flag, Timer, CircleCheck
 } from '@element-plus/icons-vue'
 
 const projectStore = useProjectStore()
@@ -172,10 +172,13 @@ const fetchProjectData = async () => {
 
 // 筛选任务
 const filteredTasks = computed(() => {
+  // 如果当前项目没有里程碑，则返回一个空列表
   if (!currentProject.value?.tasks) return []
   
-  return taskFilter.value === 'all' 
-    ? currentProject.value.tasks 
+  return taskFilter.value === 'all'
+    // 如果当前筛选条件是全部任务，全部返回
+    ? currentProject.value.tasks
+    // 否则筛选状态相同的任务
     : currentProject.value.tasks.filter(task => task.status === taskFilter.value)
 })
 
@@ -202,7 +205,9 @@ const calculateDuration = (startDate, endDate) => {
   try {
     const start = new Date(startDate)
     const end = new Date(endDate)
+    // 计算毫秒差
     const diffMs = end - start
+    // 转换为天数（向上取整）
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
     
     return diffDays <= 1 
@@ -215,6 +220,7 @@ const calculateDuration = (startDate, endDate) => {
 
 // 状态文本映射
 const getStatusText = (status) => {
+  // 状态映射表
   const statusMap = {
     'done': '已完成',
     'doing': '进行中',

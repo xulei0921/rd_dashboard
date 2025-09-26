@@ -6,3 +6,10 @@ export const getEmployeeRanking = (timeFilter) => {
         params: timeFilter
     })
 }
+
+// 获取员工进度与工时统计
+export const getEmployeeProgressList = () => {
+    return request.post('employee-progress/list', {
+        
+    })
+}

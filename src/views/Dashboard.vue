@@ -539,6 +539,9 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+.table-card {
+  width: 100%;
+}
 
 .export-btn {
   display: flex;
