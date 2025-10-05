@@ -550,6 +550,10 @@ onUnmounted(() => {
 
 /* 响应式调整 */
 @media (max-width: 768px) {
+  .dashboard-container {
+    padding: 0 16px;
+  }
+
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;

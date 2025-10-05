@@ -208,6 +208,7 @@ const createOrUpdateChart = () => {
       plugins: {
         // 图例配置（项目太多，支持滚动）
         legend: {
+          display: window.innerWidth > 768,
           position: 'bottom', // 图例放右侧（避免顶部拥挤）
           labels: {
             boxWidth: 12, // 图例前小方块尺寸

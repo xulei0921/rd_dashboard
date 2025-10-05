@@ -6,6 +6,8 @@ import router from "@/router";
 
 const baseURL = 'http://192.168.1.6:8077/api'
 
+// const baseURL = '/api'
+
 const instance = axios.create({
     // TODO 1. 基础地址，超时时间
     baseURL,
