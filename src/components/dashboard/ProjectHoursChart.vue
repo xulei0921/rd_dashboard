@@ -30,6 +30,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Chart, registerables } from 'chart.js'
+import { fetchProjectProgressTrend } from '@/api/project'
 
 // 1. 注册 Chart.js 必要组件
 Chart.register(...registerables)
@@ -112,14 +113,7 @@ const fetchChartData = async () => {
     error.value = null
 
     // 1. 发起请求
-    const response = await fetch('http://192.168.1.6:8077/api/data/projectProgressTrend', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // 若需身份验证，添加Token：
-        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+    const response = await fetchProjectProgressTrend()
 
     // console.log(response)
 

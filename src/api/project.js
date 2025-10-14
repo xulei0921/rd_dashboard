@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { baseURL } from '@/utils/request'
 
 // 获取总项目数
 export const fetchTotalProjects = () => {
@@ -31,8 +32,19 @@ export const fetchCompMilestonesCount = () => {
 }
 
 // 获取项目进度趋势数据
+// export const fetchProjectProgressTrend = () => {
+//     return request.get('data/projectProgressTrend')
+// }
+
 export const fetchProjectProgressTrend = () => {
-    return request.get('data/projectProgressTrend')
+    return fetch(`${baseURL}/data/projectProgressTrend`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // 若需身份验证，添加Token：
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
 }
 
 // 获取项目工时分布数据

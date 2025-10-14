@@ -4,7 +4,11 @@ import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import router from "@/router";
 
-const baseURL = 'http://192.168.1.6:8077/api'
+// const baseURL = 'http://192.168.1.6:8077/api'
+
+const baseURL = 'http://192.168.1.3:8077/api'
+
+// const baseURL = 'http://11.64.1.126:10001/api'
 
 // const baseURL = '/api'
 

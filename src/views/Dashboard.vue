@@ -260,7 +260,7 @@ const {
         totalTasks,
         totalCompletedTasks,
         newProjectCount,
-        delayProjectCount
+        delayProjectCount,
       } = storeToRefs(projectStore)
 
 const { 

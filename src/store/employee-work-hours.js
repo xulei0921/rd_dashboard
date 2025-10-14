@@ -60,7 +60,7 @@ export const useEmployeeWorkHoursStore = defineStore('employee-work-hours', () =
           const hour = Number(hoursStr)
 
            return sum + (isNaN(hour) ? 0 : hour)
-        }, 0)
+        }, 0).toFixed(1)
 
       }
     } catch (error) {
