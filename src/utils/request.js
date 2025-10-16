@@ -6,7 +6,7 @@ import router from "@/router";
 
 // const baseURL = 'http://192.168.1.6:8077/api'
 
-const baseURL = 'http://192.168.1.3:8077/api'
+const baseURL = import.meta.env.VITE_APP_API_BASE_URL
 
 // const baseURL = 'http://11.64.1.126:10001/api'
 
@@ -15,7 +15,7 @@ const baseURL = 'http://192.168.1.3:8077/api'
 const instance = axios.create({
     // TODO 1. 基础地址，超时时间
     baseURL,
-    timeout: 10000
+    timeout: 8000
 })
 
 // 请求拦截器

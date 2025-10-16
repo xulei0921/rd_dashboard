@@ -5,6 +5,7 @@
     :width="isMobile ? '90%' : '700px'"
     :before-close="handleClose"
     destroy-on-close
+    align-center="true"
   >
     <!-- 筛选工具栏 -->
     <div class="filter-bar">

@@ -152,7 +152,7 @@ const fetchChartData = async () => {
   }
 }
 
-// 6. 【核心】合并后端数据与前端样式
+// 6. 合并后端数据与前端样式
 const mergeDataAndStyle = (backendMonths, backendSeries) => {
   console.log('后端series数量:', backendSeries.length);
 
@@ -226,7 +226,7 @@ const createOrUpdateChart = () => {
         // 标题配置（图表顶部标题）
         title: {
           display: true,
-          text: '各项目进度趋势图（1-9月）',
+          text: '各项目进度趋势图',
           font: { size: 16, weight: 'bold' },
           padding: { bottom: 30 }
         }

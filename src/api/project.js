@@ -41,8 +41,6 @@ export const fetchProjectProgressTrend = () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 若需身份验证，添加Token：
-        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
 }

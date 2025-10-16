@@ -55,8 +55,8 @@
         
         <el-dropdown placement="bottom-end">
           <el-button type="text" class="user-btn">
-            <el-avatar class="mr-2"><img src="https://picsum.photos/id/1005/200/200" alt="用户头像"></el-avatar>
-            <span class="nickname">张经理</span>
+            <el-avatar class="mr-2"><img src="https://picsum.photos/id/1001/200/200" alt="用户头像"></el-avatar>
+            <span class="nickname">admin</span>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>

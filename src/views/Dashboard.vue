@@ -125,6 +125,14 @@
         <el-card :border="false" class="ranking-card">
           <div class="card-header">
             <h3 class="card-title">员工工时排名</h3>
+            <el-button
+              class="export-ranking-btn"
+              type="primary"
+              size="small"
+              @click="openRankingExportForm"
+            >
+              <el-icon :size="14"><Download /></el-icon>工时导出
+            </el-button>
             <el-select v-model="rankingTimeRange" size="small" style="width: 70px;" @change="fetchEmployeeRanking">
               <el-option label="本月" value="month"></el-option>
               <el-option label="上月" value="lastMonth"></el-option>
@@ -154,6 +162,10 @@
           <FullRankingDialog
             v-model:visible="showFullRanking"
             :init-time-range="rankingTimeRange"
+          />
+
+          <RankingExportForm 
+            v-model:visible="showRankingExportForm"
           />
 
         </el-card>
@@ -226,7 +238,7 @@
 <script setup>
 import { onMounted, ref, reactive, onUnmounted, watch } from 'vue'
 import { 
-  Folder, Check, Clock, Flag, User, 
+  Folder, Check, Clock, Flag, User,
   Download, ArrowRight, Loading, Top, ArrowUpBold, ArrowDownBold
 } from '@element-plus/icons-vue'
 
@@ -240,6 +252,7 @@ import EmployeeStatsTable from '../components/dashboard/EmployeeStatsTable.vue'
 import FullRankingDialog from '@/components/dashboard/FullRankingDialog.vue'
 import ProjectHoursChart from '@/components/dashboard/ProjectHoursChart.vue'
 import ProjectList from '@/components/dashboard/ProjectList.vue'
+import RankingExportForm from '@/components/dashboard/RankingExportForm.vue'
 
 import { useProjectStore, useEmployeeWorkHoursStore, useAppStore, useTeamStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -308,10 +321,15 @@ const loadingStatus = reactive({
 
 // 控制弹窗显示
 const showFullRanking = ref(false)
+const showRankingExportForm = ref(false)
 
 // 打开弹窗
 const openFullRanking = () => {
   showFullRanking.value = true
+}
+const openRankingExportForm = () => {
+  showRankingExportForm.value = true
+  console.log(showRankingExportForm.value)
 }
 
 watch(rankingTimeRange, (newVal) => {
