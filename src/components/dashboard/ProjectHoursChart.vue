@@ -337,7 +337,7 @@ watch(searchKeyword, (keyword) => {
         // 标题配置（图表顶部标题）
         title: {
           display: true,
-          text: '各项目工时消耗图（1-9月）',
+          text: '各项目工时消耗图',
           font: { size: 16, weight: 'bold' },
           padding: { bottom: 30 }
         }

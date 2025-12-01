@@ -31,3 +31,41 @@ export const exportEmployeeWokeHoursData = (startTime, endTime) => {
 export const exportBriefEmployeeWokeHoursData = (startTime, endTime) => {
     return `${baseURL}/api/workhour/exportSimple?startTime=${startTime}&endTime=${endTime}`
 }
+
+// 获取员工工时列表
+export const getEmployeeWorkHourList = (data) => {
+    return request.post('/api/workhour/list', data)
+}
+
+// 获取所有项目名称列表
+export const getEmployeeWorkProjectList = () => {
+    return request.get('/api/workhour/projectList')
+}
+
+// 获取所有执行名称列表
+export const getEmployeeExecutionList = () => {
+    return request.get('/api/workhour/executionList')
+}
+
+// 报表中心导出员工工时记录
+export const exportEmployeeWorkHourRecord = (params) => {
+    return request({
+        method: 'POST',
+        url: '/api/workhour/exportDetailList',
+        data: params,
+        responseType: 'blob',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+// 根据筛选条件获取员工工时汇总
+export const getEmployeeWorkHourSummary = (data) => {
+    return request.post('/api/workhour/totalHour', data)
+}
+
+// 获取所有用户列表
+export const getUserList = () => {
+    return request.get('/user/list')
+}

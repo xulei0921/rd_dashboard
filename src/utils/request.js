@@ -36,9 +36,9 @@ instance.interceptors.response.use(
     (res) => {
         // TODO 3. 处理业务失败
         // TODO 4. 摘取核心响应数据
-        if (res.data.code === 0) {
-            return res
-        }
+        // if (res.data.code === 0) {
+        //     return res
+        // }
         // 处理业务失败，给错误提示，抛出错误
         // ElMessage.error({ message: res.data.message || '服务异常', type: 'error' })
         // return Promise.reject(res.data)
@@ -53,7 +53,7 @@ instance.interceptors.response.use(
 
         // 错误的默认情况 => 只要给提示
         ElMessage.error({ message: err.response.data.message || '服务异常', type: 'error' })
-        console.log(err)
+        // console.log(err)
         return Promise.reject(err)
     }
 )

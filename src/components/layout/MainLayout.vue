@@ -16,7 +16,7 @@
       </div>
       
       <el-menu 
-        :default-active="activeRoute" 
+        :default-active="getActiveTopMenu" 
         mode="horizontal"
         class="nav-menu"
         @select="handleMenuSelect"
@@ -70,7 +70,7 @@
     </el-header>
 
     <!-- 移动端导航菜单 -->
-    <el-drawer
+    <!-- <el-drawer
       v-model="isMobileMenuOpen"
       direction="left"
       :with-header="false"
@@ -102,7 +102,7 @@
         <span>报表中心</span>
       </el-menu-item>
     </el-menu>
-  </el-drawer>
+  </el-drawer> -->
     
     <!-- 主内容区 -->
     <el-main class="main-content">
@@ -121,7 +121,7 @@
     </el-main>
     
     <!-- 页脚 -->
-    <el-footer class="footer">
+    <el-footer class="footer" style="z-index: 100;">
       <div class="footer-content">
         <p>© 2025 软件研发管理平台 | 数据每30分钟同步一次</p>
         <div class="footer-links">
@@ -150,7 +150,25 @@ const route = useRoute()
 
 // 状态
 const timeRange = ref('month')
-const activeRoute = computed(() => route.path)
+const getActiveTopMenu = computed(() => {
+  const currentPath = route.path
+
+  // 定义所有顶部菜单的路由前缀
+  const topMenuRoutes = [
+    { prefix: '/', index: '/' },
+    { prefix: '/projects', index: '/projects' },
+    { prefix: '/team', index: '/team' },
+    { prefix: '/reports', index: '/reports' }
+  ]
+
+  // 遍历匹配，返回第一个符合条件的顶部菜单索引
+  for (const menu of topMenuRoutes) {
+    if (currentPath === menu.prefix || currentPath.startsWith(`${menu.prefix}/`)) {
+      return menu.index
+    }
+  }
+  return ''
+})
 const isShowAlert = ref(false)
 const isMobileMenuOpen = ref(false)
 
@@ -218,7 +236,7 @@ const handleRefresh = () => {
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 0px;
   background-color: #f5f7fa;
   overflow-y: auto;
 }

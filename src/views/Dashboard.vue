@@ -27,7 +27,7 @@
         </el-select>
         
         <el-button type="primary" size="small" class="export-btn">
-          <el-icon :size="16" class="mr-1"><Download /></el-icon>
+          <el-icon :size="16" class="mr-1"><Upload /></el-icon>
           导出报表
         </el-button>
       </div>
@@ -131,7 +131,7 @@
               size="small"
               @click="openRankingExportForm"
             >
-              <el-icon :size="14"><Download /></el-icon>工时导出
+              <el-icon :size="14"><Upload /></el-icon>工时导出
             </el-button>
             <el-select v-model="rankingTimeRange" size="small" style="width: 70px;" @change="fetchEmployeeRanking">
               <el-option label="本月" value="month"></el-option>
@@ -238,7 +238,7 @@
 <script setup>
 import { onMounted, ref, reactive, onUnmounted, watch } from 'vue'
 import { 
-  Folder, Check, Clock, Flag, User,
+  Folder, Check, Clock, Flag, User, Upload,
   Download, ArrowRight, Loading, Top, ArrowUpBold, ArrowDownBold
 } from '@element-plus/icons-vue'
 
@@ -466,7 +466,7 @@ onUnmounted(() => {
 <style scoped>
 .dashboard-container {
   width: 100%;
-  padding: 0 110px;
+  padding: 20px 110px;
 }
 
 .dashboard-header {
@@ -508,11 +508,18 @@ onUnmounted(() => {
 }
 
 .card-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
   border-bottom: 1px solid #f2f3f5;
+}
+
+.export-ranking-btn {
+  position: absolute;
+  /* left: 140px; */
+  right: 100px;
 }
 
 .card-title {

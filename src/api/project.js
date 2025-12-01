@@ -59,3 +59,30 @@ export const fetchNewProjectCount = () => {
 export const fetchDelayProjectCount = () => {
     return request.get('project/delayedProjects')
 }
+
+// 获取项目情况汇总数据
+export const fetchProjectSummary = (filterData) => {
+    return request.get('/api/workhour/projectQKSummary', {
+        params: filterData
+    })
+}
+
+// 获取对应项目的执行
+export const fetchProjectExecution = (data) => {
+    return request.get(`/api/workhour/projectExecutors?projectName=${data}`)
+}
+
+// 报表中心导出项目情况汇总
+export const exportProjectSummary = (params) => {
+    return request({
+        method: 'POST',
+        url: '/api/workhour/exportProjectQKSummary',
+        data: params,
+        responseType: 'blob',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+
+    // return request.post('/api/workhour/exportProjectQKSummary', params)
+}

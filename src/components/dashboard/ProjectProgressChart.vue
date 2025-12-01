@@ -52,6 +52,7 @@ const CHART_STYLE_TEMPLATE = {
   // 所有数据集共享的公共样式
   common: {
     tension: 0,    // 曲线平滑度
+    smoothMonotone: 'y', // 强制y轴单调递增，曲线不会向下突起
     fill: true,      // 填充曲线下方区域
     pointRadius: 3,  // 数据点大小
     pointHoverRadius: 6, // 鼠标悬浮时数据点大小
@@ -340,7 +341,7 @@ watch(searchKeyword, (keyword) => {
         // 标题配置（图表顶部标题）
         title: {
           display: true,
-          text: '各项目进度趋势图（1-9月）',
+          text: '各项目进度趋势图',
           font: { size: 16, weight: 'bold' },
           padding: { bottom: 30 }
         }

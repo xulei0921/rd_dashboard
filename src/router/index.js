@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
+import Dashboard from '@/views/Dashboard.vue'
 
 const routes = [
   {
@@ -17,11 +17,22 @@ const routes = [
   //   name: 'Team',
   //   component: () => import('../views/Team.vue')
   // },
-  // {
-  //   path: '/reports',
-  //   name: 'Reports',
-  //   component: () => import('../views/Reports.vue')
-  // }
+  {
+    path: '/reports',
+    name: 'Reports',
+    component: () => import('@/views/Reports.vue'),
+    redirect: '/reports/workhour-list',
+    children: [
+      {
+        path: '/reports/workhour-list',
+        component: () => import('@/views/WorkHourList.vue')
+      },
+      {
+        path: '/reports/task-summary',
+        component: () => import('@/views/TaskSummary.vue')
+      }
+    ]
+  }
 ]
 
 const router = createRouter({
